@@ -85,7 +85,7 @@
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* 莫蘭迪高亮樣式 (保留定義但此版本GuideItem已移除引用) */
+        /* 莫蘭迪高亮樣式 (保留定義) */
         .hl-rose { color: #9d5b6e; font-weight: 700; background-color: #f4e9ec; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-blue { color: #5f7285; font-weight: 700; background-color: #e6eef5; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-yellow { color: #9c8456; font-weight: 700; background-color: #f7f2e6; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
@@ -132,7 +132,7 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 行李清單資料 (已移除手機) ---
+        // --- 行李清單資料 ---
         const packingList = {
             "重要證件": ["護照", "身分證", "電子簽證/紙本簽證", "登機證/機票證明", "保險卡", "信用卡", "日幣現金", "台幣千元鈔(備用)", "駕照/譯本", "交通卡/周遊券"],
             "3C 產品": ["耳機", "SIM卡/eSIM", "充電器(各類)", "相機", "萬國插頭", "記憶卡/備用電池", "自拍棒/腳架(管徑<1cm)", "行動電源(不可超過2個)"],
@@ -147,7 +147,7 @@
             { title: "絕對禁止 (Forbidden)", icon: "ban", items: ["鉛酸電池", "易燃液體", "漂白水", "殺蟲劑"] }
         ];
 
-        // --- 完整行程資料 ---
+        // --- 完整行程資料 (Google Maps Hours Verified) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
@@ -201,7 +201,7 @@
                         guide: ["推薦：混合燒 (Mix-yaki)。", "口感：口感蓬鬆，醬汁濃郁。"]
                     },
                     { 
-                        time: "21:30", type: "food", title: "串かつ専門店 松葉 総本店", address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", nav: "Matsuba Sohonten", tags: ["體驗"], hours: "10:30-22:00",
+                        time: "21:30", type: "food", title: "串かつ専門店 松葉 総本店", address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", nav: "Matsuba Sohonten", tags: ["體驗"], hours: "10:30-21:30",
                         guide: ["注意：醬汁禁止二次沾取 (二度漬け禁止)。", "特色：立食串炸老店，感受大阪大叔氛圍。"]
                     },
                     { 
@@ -321,7 +321,7 @@
                         guide: ["美食：B1 地下街美食豐富。", "品牌：國際精品與化妝品齊全。", "必去：THE NORTH FACE／New Balance 京都髙島屋S.C.店"] 
                     },
                     { time: "19:30", type: "sight", title: "錦天滿宮", address: "京都市中京区新京極通り四条上る中之町537", nav: "Nishiki Tenmangu", tags: ["祈福"], hours: "08:00-20:00", guide: ["特色：位於錦市場盡頭，鳥居嵌入建築物中。", "祈求：學問之神，求智慧。"] },
-                    { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", hours: "10:00-20:00", guide: ["動漫迷聖地。"] },
+                    { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", hours: "11:00-20:00", guide: ["動漫迷聖地。"] },
                     { time: "21:00", type: "food", title: "一蘭拉麵", address: "京都市中京区蛸薬師通新京極東入裏寺町598", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"], hours: "10:00-06:00", guide: ["口味：完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"] },
                     { time: "22:00", type: "hotel", title: "ホテルビスタプレミオ京都 和邸", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", hours: "24H", guide: ["整理戰利品。"] }
                 ] 
@@ -333,7 +333,7 @@
                     { time: "09:30", type: "shop", title: "清水坂 / 產寧坂", address: "京都市東山区清水2-256", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"], hours: "09:00-18:00", guide: ["必買：京都北山MALEBRANCHE (茶之菓)。", "必逛：七味家本舗、伊藤軒／SOU・SOU清水店。", "特色：七味唐辛子 OCHANOKOSAISAI、京都 JIZO堂。", "推薦：Nittodo Kyoto Cafe、京都烏丸六七堂 (八坂通店)。"] },
                     { time: "11:30", type: "sight", title: "八阪庚申堂", address: "京都市東山区金園町390", nav: "Yasaka Koshin-do", hours: "09:00-17:00", guide: ["色彩繽紛的束猿 (結緣猴)，IG 打卡熱點。"] },
                     { 
-                        time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山区祇園町南側", nav: "Gion Unagi Kawatō", hours: "11:00-20:00", 
+                        time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山区祇園町南側", nav: "Gion Unagi Kawatō", hours: "11:00-14:30 / 17:00-20:30", 
                         guide: ["午餐推薦：鰻魚飯三吃。"],
                         booking: { id: "UHLMCL", name: "CHEN HSUAN YU", time: "12:30" }
                     },
@@ -353,8 +353,8 @@
                 date: "1/15", weekday: "Thu", area: "返程", lat: 34.9671, lon: 135.7727,
                 events: [ 
                     { time: "07:00", type: "sight", title: "伏見稻荷大社", address: "京都市伏見区深草藪之内町68", nav: "Fushimi Inari Taisha", tags: ["必拍"], hours: "24H", guide: ["★ 攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"], about: { title: "千本鳥居", content: "全日本三萬座稻荷神社總本宮。紅色鳥居是信徒供奉，象徵對神明保佑五穀豐收、生意興隆的感謝。" } },
-                    { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京区押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], hours: "24H", guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
-                    { time: "11:00", type: "food", title: "麵屋優光", address: "京都市中京区場之町588", nav: "Menya Yukou", tags: ["必吃", "排隊"], hours: "11:00-22:00", guide: ["★ 必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"], about: { title: "職人精神", content: "店主曾在名店修業，堅持使用多種貝類熬製高湯，創造出充滿鮮味 (Umami) 卻清爽不油膩的新派京都拉麵。" } },
+                    { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京区押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], hours: "24H (授與所 10:00-16:00)", guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
+                    { time: "11:00", type: "food", title: "麵屋優光", address: "京都市中京区場之町588", nav: "Menya Yukou", tags: ["必吃", "排隊"], hours: "11:00-15:00 / 17:30-22:00", guide: ["★ 必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"], about: { title: "職人精神", content: "店主曾在名店修業，堅持使用多種貝類熬製高湯，創造出充滿鮮味 (Umami) 卻清爽不油膩的新派京都拉麵。" } },
                     { time: "12:00", type: "transport", title: "利木津巴士", address: "京都車站八條口", nav: "Kyoto Station Hachijoguchi Bus Stop", guide: ["前往關西機場 (KIX)。", "車程約 85 分鐘，不用搬行李轉車。"] },
                     { time: "16:15", type: "transport", title: "關西機場", address: "KIX T1", nav: "Kansai International Airport", guide: ["Goodbye Japan!", "記得入關前買免稅品。"] }
                 ] 
@@ -408,7 +408,6 @@
                 const label = cleanText.substring(0, splitIndex);
                 const content = cleanText.substring(splitIndex + 1);
                 
-                // Modified: No colored backgrounds, just bold text
                 return (
                     <li className="flex items-start text-sm text-stone-500 leading-relaxed mb-3">
                         <span className="text-stone-300 mr-2 mt-1 text-[10px] flex-shrink-0">●</span>
