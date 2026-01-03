@@ -101,7 +101,7 @@
             return hours;
         };
 
-        // --- 完整行程資料 (Day 4 Updated) ---
+        // --- 完整行程資料 ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", temp: "6-10°C", condition: "Cloudy",
@@ -435,7 +435,10 @@
                     <div className="pb-32 animate-fade-in">
                         {/* Header */}
                         <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-4 pb-3 border-b border-gray-200">
-                            <h1 className="text-center text-lg serif font-bold text-[#44403c] mb-3 tracking-[0.2em]">2026 京阪旅行</h1>
+                            <h1 className="text-center text-[17px] serif font-bold text-[#44403c] mb-3 tracking-[0.25em] flex items-center justify-center">
+                                <span className="mr-2 text-base opacity-80">⛩️</span>
+                                2026 京阪旅行
+                            </h1>
                             <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 pb-1">
                                 {Object.keys(itineraryData).map(day => (
                                     <button 
