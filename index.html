@@ -100,7 +100,7 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 完整行程資料 ---
+        // --- 完整行程資料 (Day 2/Day 4 Booking Info Added) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
@@ -189,7 +189,8 @@
                     { 
                         time: "13:00", type: "food", title: "牛かつもと村", address: "大阪府大阪市中央区難波3-3-1", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["必吃", "排隊"], hours: "11:00-22:00",
                         guide: ["必點菜單：炸牛排定食 (130g)。", "吃法：石板上煎至喜歡熟度，沾芥末醬油。", "重要：建議提早 10 分鐘到店。"],
-                        about: { title: "美味秘密", content: "只炸 60 秒的半熟牛肉，外酥內嫩，是日本炸牛排風潮的代表名店。" }
+                        about: { title: "美味秘密", content: "只炸 60 秒的半熟牛肉，外酥內嫩，是日本炸牛排風潮的代表名店。" },
+                        booking: { id: "2PAKJX", name: "CHEN HSUAN YU", time: "13:00" }
                     },
                     { time: "14:00", type: "food", title: "章魚燒道樂 Wanaka", address: "大阪府大阪市中央区道頓堀1-6-12", nav: "Takoyaki Wanaka Dotonbori", hours: "11:00-22:00", guide: ["道頓堀排隊點心。"] },
                     { time: "14:15", type: "sight", title: "御津八幡宮", address: "大阪府大阪市中央区西心斎橋2-10-7", nav: "Mitsu Hachimangu", hours: "09:00-17:00", guide: ["特色：美國村內的寧靜角落，有可愛的寵物御守。"] },
@@ -225,8 +226,9 @@
                     },
                     { time: "20:10", type: "shop", title: "HEP FIVE", address: "大阪府大阪市北区角田町5-15", nav: "HEP FIVE", hours: "11:00-21:00", guide: ["地標：紅色摩天輪地標，年輕服飾品牌多。"] },
                     { 
-                        time: "21:00", type: "food", title: "燒肉力丸", address: "大阪府大阪市北区小松原町4-32 北大阪東通りビル 3F", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦", "吃到飽"], hours: "16:00-23:00",
-                        guide: ["必點：厚切牛舌、橫膈膜。", "特色：CP值極高的國產牛吃到飽。"]
+                        time: "21:15", type: "food", title: "焼肉力丸 梅田東通り店", address: "大阪府大阪市北区小松原町4-32 北大阪東通りビル 3F", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦", "吃到飽"], hours: "16:00-23:00",
+                        guide: ["必點：厚切牛舌、橫膈膜。", "特色：CP值極高的國產牛吃到飽。"],
+                        booking: { name: "CHEN HSUAN YU", time: "21:15" }
                     }
                 ] 
             },
@@ -275,7 +277,11 @@
                     { time: "07:30", type: "sight", title: "清水寺", address: "京都市東山区清水1-294", nav: "Kiyomizu-dera", tags: ["必去", "世界遺產"], hours: "06:00-18:00", guide: ["攻略：早上 8 點前人潮最少。", "必做：到『音羽之瀧』接水喝 (學業/戀愛/長壽)。"], about: { title: "清水舞台", content: "正殿依懸崖而建，由 139 根巨大櫸木支撐，結構中沒使用任何釘子，是日本傳統木造建築巔峰。" } },
                     { time: "09:30", type: "shop", title: "清水坂 / 產寧坂", address: "京都市東山区清水2-256", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"], hours: "09:00-18:00", guide: ["必買：京都北山MALEBRANCHE (茶之菓)。", "必逛：七味家本舗、伊藤軒／SOU・SOU清水店。", "特色：七味唐辛子 OCHANOKOSAISAI、京都 JIZO堂。", "推薦：Nittodo Kyoto Cafe、京都烏丸六七堂 (八坂通店)。"] },
                     { time: "11:30", type: "sight", title: "八阪庚申堂", address: "京都市東山区金園町390", nav: "Yasaka Koshin-do", hours: "09:00-17:00", guide: ["色彩繽紛的束猿 (結緣猴)，IG 打卡熱點。"] },
-                    { time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山区祇園町南側", nav: "Gion Unagi Kawatō", hours: "11:00-20:00", guide: ["午餐推薦：鰻魚飯三吃。"] },
+                    { 
+                        time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山区祇園町南側", nav: "Gion Unagi Kawatō", hours: "11:00-20:00", 
+                        guide: ["午餐推薦：鰻魚飯三吃。"],
+                        booking: { id: "UHLMCL", name: "CHEN HSUAN YU", time: "12:30" }
+                    },
                     { time: "13:30", type: "shop", title: "Miffy's Oyatsu-do", address: "京都市東山区祇園町南側", nav: "Miffy's Oyatsu-do Gion", tags: ["可愛"], hours: "10:00-18:00", guide: ["みっふぃーおやつ堂：米飛兔造型點心、雜貨。"] },
                     { time: "13:45", type: "shop", title: "最強一味", address: "京都市東山区", nav: "Saikyo Ichimi", hours: "10:00-18:00", guide: ["特色：京都超辣辣椒粉，適合喜歡吃辣的人。"] },
                     { time: "14:00", type: "sight", title: "祇園白川／祇園商店街", address: "京都市東山区", nav: "Gion Shirakawa", tags: ["散步"], hours: "24H", guide: ["必拍：巽橋、柳樹與町家建築。", "氛圍：最具京都風情的街道。"] },
@@ -377,25 +383,19 @@
             const [selectedDay, setSelectedDay] = useState("Day 1");
             const [activeTab, setActiveTab] = useState("schedule");
             const [selectedEvent, setSelectedEvent] = useState(null);
-            
-            // Weather
             const [currentTemp, setCurrentTemp] = useState("--");
             const [currentCondition, setCurrentCondition] = useState("Loading...");
             const [hourlyForecast, setHourlyForecast] = useState([]);
-
-            // Currency
             const [exchangeRate, setExchangeRate] = useState(0.215);
             const [inputVal, setInputVal] = useState(1000);
-            const [direction, setDirection] = useState(true); // true: JPY->TWD
+            const [direction, setDirection] = useState(true);
 
             useEffect(() => { lucide.createIcons(); }, [selectedDay, activeTab, selectedEvent, hourlyForecast]);
 
-            // Weather & Currency Fetch
             useEffect(() => {
                 const fetchData = async () => {
                     const { lat, lon } = itineraryData[selectedDay];
                     try {
-                        // Weather
                         const res = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&current_weather=true&timezone=Asia%2FTokyo`);
                         const current = res.data.current_weather;
                         const hourly = res.data.hourly;
@@ -423,7 +423,6 @@
                         }
                         setHourlyForecast(next24);
 
-                        // Currency
                         const rateRes = await axios.get('https://api.exchangerate-api.com/v4/latest/JPY');
                         if (rateRes.data && rateRes.data.rates && rateRes.data.rates.TWD) {
                             setExchangeRate(rateRes.data.rates.TWD);
@@ -454,9 +453,8 @@
 
                 return (
                     <div className="pb-40 animate-fade-in">
-                        {/* Header */}
-                        <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-4 pb-3 border-b border-stone-200/50">
-                            <h1 className="text-center text-[17px] serif font-bold text-[#44403c] mb-3 tracking-[0.1em] flex items-center justify-center">
+                        <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-6 pb-4 border-b border-stone-200/50">
+                            <h1 className="text-center text-[17px] serif font-bold text-[#44403c] mb-5 tracking-[0.1em] flex items-center justify-center">
                                 <span className="mr-2 text-base opacity-60 grayscale">⛩️</span>
                                 2026 京阪旅行
                             </h1>
@@ -478,7 +476,6 @@
                             </div>
                         </div>
 
-                        {/* Weather Widget */}
                         <div className="px-5 mt-6 mb-2">
                             <div className="flex justify-between items-end mb-3 ml-1">
                                 <h2 className="text-[10px] font-bold text-[#a8a29e] uppercase tracking-widest">Live Forecast</h2>
@@ -500,7 +497,6 @@
                             </div>
                         </div>
 
-                        {/* Currency Converter */}
                         <div className="px-5 mt-4 mb-6">
                             <div className="bg-white rounded-xl border border-stone-100 p-4 shadow-sm">
                                 <div className="flex justify-between items-center text-xs text-[#a8a29e] mb-2 font-bold tracking-wider">
@@ -528,7 +524,6 @@
                             </div>
                         </div>
 
-                        {/* Event List */}
                         <div className="px-5 mt-6 space-y-4 relative">
                              {currentData.events.map((event, index) => {
                                  const isLast = index === currentData.events.length - 1;
@@ -554,6 +549,11 @@
                                                         <span className={`text-[9px] font-bold text-white px-2 py-0.5 rounded-full ${theme.bg}`}>
                                                             {event.type.toUpperCase()}
                                                         </span>
+                                                        {event.hours && (
+                                                            <span className="text-[10px] text-[#a8a29e] ml-2">
+                                                                {event.hours}
+                                                            </span>
+                                                        )}
                                                     </div>
                                                     <h3 className="text-base font-bold text-[#57534e] serif leading-tight mb-1 truncate">
                                                         {event.title}
@@ -573,7 +573,6 @@
                              })}
                         </div>
 
-                        {/* Modal Popup */}
                         {selectedEvent && (
                             <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
                                 <div 
@@ -582,7 +581,6 @@
                                 ></div>
                                 
                                 <div className="modal-content modal-enter relative bg-white w-full sm:max-w-md h-[80vh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col">
-                                    
                                     <div className="p-6 pb-4 bg-white z-10 border-b border-stone-50">
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center space-x-2">
@@ -599,21 +597,35 @@
                                             {selectedEvent.title}
                                         </h2>
                                         
-                                        {/* Modal Only: Clock */}
                                         {selectedEvent.hours && (
                                             <div className="flex items-center text-xs text-[#8f9eaf] font-bold mb-3">
-                                                <Icon name="clock" size={14} className="mr-1.5" />
+                                                <Icon name="clock" size={12} className="mr-1.5" />
                                                 {selectedEvent.hours}
                                             </div>
                                         )}
 
-                                        <div className="flex items-start text-xs text-stone-500 bg-[#fafaf9] p-3 rounded-lg">
-                                            <Icon name="map" size={14} className="mr-2 mt-0.5 flex-shrink-0 text-[#a8a29e]" />
+                                        <div className="flex items-center text-xs text-stone-500 bg-[#fafaf9] p-3 rounded-lg">
+                                            <Icon name="map" size={14} className="mr-2 flex-shrink-0 text-[#a8a29e]" />
                                             <span className="leading-relaxed">{selectedEvent.address}</span>
                                         </div>
                                     </div>
 
                                     <div className="flex-1 overflow-y-auto p-6 bg-white space-y-8">
+                                        {selectedEvent.booking && (
+                                            <div className="bg-[#fffbeb] border border-[#fcd34d] border-dashed rounded-xl p-4 mb-4 relative">
+                                                <div className="absolute -top-3 left-4 bg-[#fcd34d] text-[#78350f] text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                                                    訂位資訊 RESERVATION
+                                                </div>
+                                                <div className="mt-2 space-y-1 text-xs text-[#92400e]">
+                                                    <div className="flex"><span className="w-16 font-bold opacity-70">日期時間</span> {itineraryData[selectedDay].date} {selectedEvent.booking.time}</div>
+                                                    <div className="flex"><span className="w-16 font-bold opacity-70">姓名</span> {selectedEvent.booking.name}</div>
+                                                    {selectedEvent.booking.id && (
+                                                        <div className="flex"><span className="w-16 font-bold opacity-70">確認號碼</span> <span className="font-mono font-bold bg-white px-1 rounded">{selectedEvent.booking.id}</span></div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+
                                         {selectedEvent.guide && (
                                             <div>
                                                 <div className="flex items-center space-x-2 mb-4">
