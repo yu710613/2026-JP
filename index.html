@@ -100,13 +100,13 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 完整行程資料 (Day 1-5 Updated) ---
+        // --- 完整行程資料 (Day 1 & Day 3 飯店名稱修正) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
                 events: [ 
                     { time: "14:55", type: "transport", title: "關西機場 (KIX)", address: "大阪府泉佐野市泉州空港北1", nav: "Kansai International Airport", guide: ["入境審查請預留 60-90 分鐘。", "請提前截圖 Visit Japan Web 的 QR Code。", "領取行李後，前往 2F 搭乘南海電鐵。"], about: { title: "接駁資訊", content: "搭乘南海電鐵『空港急行』前往天下茶屋站換乘堺筋線，是最省錢也最快到達北濱飯店的方式。" } },
-                    { time: "17:00", type: "hotel", title: "Check-in: 京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"], guide: ["交通：北濱站 2號出口直達。", "提醒：先寄放行李與領取網購包裹。"], about: { title: "飯店位置", content: "位於京阪電車與地鐵堺筋線交會處，對於前往京都或大阪南區（難波/日本橋）都非常方便。" } },
+                    { time: "17:00", type: "hotel", title: "ホテル京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"], guide: ["交通：北濱站 2號出口直達。", "提醒：先寄放行李與領取網購包裹。"], about: { title: "飯店位置", content: "位於京阪電車與地鐵堺筋線交會處，對於前往京都或大阪南區（難波/日本橋）都非常方便。" } },
                     { time: "17:20", type: "shop", title: "阪急百貨 梅田本店", address: "大阪府大阪市北区角田町8-7", nav: "Hankyu Umeda Main Store", tags: ["購物"], guide: ["必逛：B1 美食街伴手禮一級戰區。", "推薦：Baton d'or 高級Pocky、Grand Calbee。"] },
                     { time: "17:50", type: "food", title: "grenier Umeda", address: "大阪府大阪市北区角田町8-47 阪急グランドビル 1F", nav: "grenier Umeda", tags: ["必吃", "排隊"], guide: ["必點菜單：烤布蕾千層派 (ブリュレミルフィーユ)。", "攻略：若人潮過多，可先逛同層樓雜貨。"], about: { title: "店名由來", content: "Grenier 法文意為『閣樓』。店鋪設計充滿復古雜貨與溫暖甜點香氣，是梅田近年最紅的打卡甜點。" } },
                     { time: "18:20", type: "shop", title: "LUCUA 1100", address: "大阪府大阪市北区梅田3-1-3", nav: "LUCUA 1100", tags: ["購物"], guide: ["重點：9F 蔦屋書店很有氛圍。", "美食：B2 美食街 (バルチカ) 選擇多。"] },
@@ -117,7 +117,7 @@
                     { time: "21:15", type: "food", title: "お好み焼 SAKURA", address: "大阪府大阪市北区角田町9-26 新梅田食道街", nav: "Okonomiyaki Sakura", tags: ["必吃"], guide: ["推薦：混合燒 (Mix-yaki)。", "口感：口感蓬鬆，醬汁濃郁。"] },
                     { time: "21:30", type: "food", title: "串かつ専門店 松葉 総本店", address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", nav: "Matsuba Sohonten", tags: ["體驗"], guide: ["注意：醬汁禁止二次沾取 (二度漬け禁止)。", "特色：立食串炸老店，感受大阪大叔氛圍。"] },
                     { time: "22:00", type: "shop", title: "Book Studio", address: "大阪府大阪市北区梅田3-1-1 JR大阪駅構内", nav: "Book Studio Osaka", guide: ["購買旅遊書或文具。"] },
-                    { time: "22:30", type: "transport", title: "回飯店休息", address: "Hotel Keihan Yodoyabashi", nav: "Hotel Keihan Yodoyabashi", guide: ["養精蓄銳。"] }
+                    { time: "22:30", type: "transport", title: "ホテル京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", guide: ["養精蓄銳。"] }
                 ] 
             },
             "Day 2": { 
@@ -146,7 +146,7 @@
                 date: "1/13", weekday: "Tue", area: "大阪 -> 京都", lat: 35.0116, lon: 135.7681,
                 events: [ 
                     { time: "09:00", type: "sight", title: "大阪城", address: "大阪府大阪市中央区大阪城1-1", nav: "Osaka Castle", guide: ["晨間散步，天守閣拍照。"] },
-                    { time: "10:00", type: "hotel", title: "Check-in: Vista Premio", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"], guide: ["移動：移動至京都，先寄放行李。", "位置：飯店位於市中心，逛街超方便。"] },
+                    { time: "10:00", type: "hotel", title: "ホテルビスタプレミオ京都 和邸", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"], guide: ["移動：移動至京都，先寄放行李。", "位置：飯店位於市中心，逛街超方便。"] },
                     { time: "11:15", type: "food", title: "三嶋亭 (高島屋店)", address: "京都市下京区四条通河原町西入真町52 7F", nav: "Mishima-tei Takashimaya Kyoto", tags: ["必吃", "百年老店"], guide: ["攻略：這裡的午間套餐是本店半價，CP 值極高。", "吃法：關西式壽喜燒 (先煎後煮)。"], about: { title: "百年歷史", content: "創業於明治 6 年 (1873年)，是京都最古老的壽喜燒專門店。堅持使用熟成黑毛和牛與獨家秘傳醬汁。" } },
                     { time: "12:45", type: "sight", title: "常寂光寺", address: "京都市右京区嵯峨小倉山小倉町3", nav: "Jojakkoji Temple", tags: ["必拍"], guide: ["特色：依山而建，紅葉名所，視野極佳。", "氛圍：幽靜古樸，適合散步。"] },
                     { time: "13:15", type: "sight", title: "竹林小徑", address: "京都市右京区嵯峨小倉山たぶち山町", nav: "Arashiyama Bamboo Grove", tags: ["必拍"], guide: ["必拍：高聳入雲的竹林隧道。", "注意：人潮眾多，注意拍照禮儀。"] },
@@ -219,7 +219,9 @@
                 "book-open": <i data-lucide="book-open" className={className}></i>,
                 sparkles: <i data-lucide="sparkles" className={className}></i>,
                 navigation: <i data-lucide="navigation" className={className}></i>,
-                "calendar-days": <i data-lucide="calendar-days" className={className}></i>
+                "calendar-days": <i data-lucide="calendar-days" className={className}></i>,
+                phone: <i data-lucide="phone" className={className}></i>,
+                "external-link": <i data-lucide="external-link" className={className}></i>
             };
             return icons[name] || icons.info;
         };
@@ -411,7 +413,7 @@
                                                         <span className="truncate">{event.address}</span>
                                                     </div>
                                                 </div>
-                                                <div className="text-stone-300">
+                                                <div className="text-stone-300 mt-2">
                                                     <Icon name="chevron-right" size={20} />
                                                 </div>
                                             </div>
@@ -510,32 +512,116 @@
             const renderInfo = () => (
                 <div className="px-5 py-8 pb-32 animate-fade-in">
                     <h2 className="text-xl font-serif font-bold text-[#57534e] mb-6 border-b pb-2 border-stone-200">旅程資訊</h2>
-                    {hotelInfos.map((hotel, i) => (
-                        <div key={i} className="event-card p-5 mb-4" onClick={() => handleNav(hotel.nav)}>
-                            <div className="pl-1">
-                                <h3 className="serif font-bold text-base text-[#57534e]">{hotel.name}</h3>
-                                <p className="text-xs text-[#a8a29e] mt-1 font-mono mb-2">{hotel.date}</p>
-                                <div className="text-xs text-stone-500 flex items-start">
-                                    <Icon name="map" size={12} className="mr-1 mt-0.5" />
-                                    {hotel.address}
+                    
+                    {/* 1. 航班卡片 (New) */}
+                    <div className="event-card p-5 mb-6 border border-[#8f9eaf]/30 bg-[#f8fafc]">
+                        <div className="flex items-center space-x-2 mb-4">
+                            <div className="bg-[#8f9eaf] p-1.5 rounded-full text-white">
+                                <Icon name="plane" size={16} />
+                            </div>
+                            <h3 className="font-bold text-[#57534e] text-sm">航班資訊 FLIGHTS</h3>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <div className="flex justify-between text-xs text-[#a8a29e] mb-1">
+                                    <span>去程 (OUTBOUND)</span>
+                                    <span>2026/01/11</span>
+                                </div>
+                                <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-stone-100">
+                                    <div className="text-center">
+                                        <span className="block text-lg font-bold text-[#57534e]">TPE</span>
+                                        <span className="text-[10px] text-[#a8a29e]">11:15</span>
+                                    </div>
+                                    <div className="flex-1 flex flex-col items-center px-2">
+                                        <span className="text-[10px] text-[#8f9eaf] font-bold">CX564</span>
+                                        <div className="w-full h-px bg-[#d6d3d1] relative">
+                                            <div className="absolute right-0 -top-1 w-2 h-2 border-t border-r border-[#d6d3d1] transform rotate-45"></div>
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <span className="block text-lg font-bold text-[#57534e]">KIX</span>
+                                        <span className="text-[10px] text-[#a8a29e]">14:55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div className="flex justify-between text-xs text-[#a8a29e] mb-1">
+                                    <span>回程 (INBOUND)</span>
+                                    <span>2026/01/15</span>
+                                </div>
+                                <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-stone-100">
+                                    <div className="text-center">
+                                        <span className="block text-lg font-bold text-[#57534e]">KIX</span>
+                                        <span className="text-[10px] text-[#a8a29e]">16:15</span>
+                                    </div>
+                                    <div className="flex-1 flex flex-col items-center px-2">
+                                        <span className="text-[10px] text-[#8f9eaf] font-bold">CX565</span>
+                                        <div className="w-full h-px bg-[#d6d3d1] relative">
+                                            <div className="absolute right-0 -top-1 w-2 h-2 border-t border-r border-[#d6d3d1] transform rotate-45"></div>
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <span className="block text-lg font-bold text-[#57534e]">TPE</span>
+                                        <span className="text-[10px] text-[#a8a29e]">18:30</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    </div>
+
+                    {/* 2. 住宿卡片 (Existing) */}
+                    <div className="space-y-4 mb-6">
+                        {hotelInfos.map((hotel, i) => (
+                            <div key={i} className="event-card p-5" onClick={() => handleNav(hotel.nav)}>
+                                <div className="pl-1">
+                                    <h3 className="serif font-bold text-base text-[#57534e]">{hotel.name}</h3>
+                                    <p className="text-xs text-[#a8a29e] mt-1 font-mono mb-2">{hotel.date}</p>
+                                    <div className="text-xs text-stone-500 flex items-start">
+                                        <Icon name="map" size={12} className="mr-1 mt-0.5" />
+                                        {hotel.address}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                     
-                    <div className="grid grid-cols-2 gap-4 mt-6">
-                         <div className="bg-[#fef2f2] p-4 rounded-xl flex flex-col items-center justify-center border border-[#fee2e2]">
-                            <Icon name="phone" size={24} className="text-[#c08497] mb-2" />
-                            <span className="text-[#9d5b6e] font-bold text-sm">110 / 119</span>
-                            <span className="text-[10px] text-[#c08497] mt-1">緊急電話</span>
+                    {/* 3. 緊急聯絡 (Updated) */}
+                    <div className="grid grid-cols-1 gap-4 mt-6">
+                         <div className="bg-[#fef2f2] p-5 rounded-xl border border-[#fee2e2] flex justify-between items-center">
+                            <div>
+                                <h4 className="text-[#9d5b6e] font-bold text-sm mb-1">緊急電話 (Police/Fire)</h4>
+                                <span className="text-2xl font-bold text-[#c08497] font-mono">110 / 119</span>
+                            </div>
+                            <div className="bg-white p-2 rounded-full">
+                                <Icon name="phone" size={20} className="text-[#c08497]" />
+                            </div>
                         </div>
-                        <div className="bg-[#f0fdf4] p-4 rounded-xl flex flex-col items-center justify-center border border-[#dcfce7]">
-                             <a href="https://transit.yahoo.co.jp/" target="_blank" className="flex flex-col items-center">
-                                <Icon name="train" size={24} className="text-[#9cad95] mb-2" />
-                                <span className="text-[#5f7285] font-bold text-sm">換乘案內</span>
-                                <span className="text-[10px] text-[#8f9eaf] mt-1">交通查詢</span>
-                            </a>
+                        
+                        <div className="bg-[#fff7ed] p-5 rounded-xl border border-[#ffedd5]">
+                            <div className="flex justify-between items-start mb-2">
+                                <div>
+                                    <h4 className="text-[#9a3412] font-bold text-sm">JAPAN VISITOR HOTLINE</h4>
+                                    <span className="text-xl font-bold text-[#ea580c] font-mono block mt-1">050-3816-2787</span>
+                                </div>
+                                <div className="bg-white p-2 rounded-full">
+                                    <Icon name="phone" size={20} className="text-[#ea580c]" />
+                                </div>
+                            </div>
+                            <p className="text-[10px] text-[#c2410c] leading-relaxed">
+                                24小時對應（英/中/韓），生病受傷或發生事故時可撥打。JNTO 提供的訪日外國人專用熱線。
+                            </p>
                         </div>
+                    </div>
+
+                    {/* 4. VJW Link (New) */}
+                    <div className="mt-6">
+                        <button 
+                            onClick={() => window.open('https://www.vjw.digital.go.jp/', '_blank')}
+                            className="w-full bg-[#3b82f6] text-white p-4 rounded-xl shadow-lg shadow-blue-100 flex items-center justify-center font-bold active:scale-95 transition-transform"
+                        >
+                            <Icon name="external-link" size={18} className="mr-2" />
+                            Visit Japan Web (入境手續)
+                        </button>
                     </div>
                 </div>
             );
