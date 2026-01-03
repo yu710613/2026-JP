@@ -89,6 +89,31 @@
         .hl-rose { color: #9d5b6e; font-weight: 700; background-color: #f4e9ec; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-blue { color: #5f7285; font-weight: 700; background-color: #e6eef5; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-yellow { color: #9c8456; font-weight: 700; background-color: #f7f2e6; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
+        
+        /* Checkbox Custom */
+        .custom-checkbox {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid #d6d3d1;
+            border-radius: 4px;
+            margin-right: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+        .custom-checkbox:checked {
+            background-color: #9cad95;
+            border-color: #9cad95;
+        }
+        .custom-checkbox:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 <body>
@@ -107,7 +132,22 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 完整行程資料 (Day 3 Shops Updated) ---
+        // --- 行李清單資料 ---
+        const packingList = {
+            "重要證件": ["護照", "身分證", "電子簽證/紙本簽證", "登機證/機票證明", "保險卡", "信用卡", "日幣現金", "台幣千元鈔(備用)", "駕照/譯本", "交通卡/周遊券"],
+            "3C 產品": ["手機", "耳機", "SIM卡/eSIM", "充電器(各類)", "相機", "萬國插頭", "記憶卡/備用電池", "自拍棒/腳架(管徑<1cm)", "行動電源(隨身攜帶)"],
+            "生活用品": ["盥洗用品(分裝)", "牙刷/牙線", "常備藥品", "衛生紙/濕紙巾", "保養品", "隱形眼鏡/藥水", "折疊雨傘", "生理用品", "吹風機/離子夾", "刮鬍刀"],
+            "衣物": ["上衣", "下身", "內衣褲", "睡衣", "發熱衣/褲", "襪子", "外套", "帽子", "飾品", "好走的鞋"],
+            "其他": ["口罩", "太陽眼鏡", "拖鞋", "隨身小包", "購物袋"]
+        };
+
+        const forbiddenItems = [
+            { title: "隨身攜帶 (Hand Carry)", icon: "briefcase", items: ["行動電源", "鋰電池", "打火機(限1個)", "液體<100ml(裝透明袋)"] },
+            { title: "必須託運 (Check-in)", icon: "archive", items: ["刀具/剪刀", "腳架>60cm", "液體>100ml", "噴霧罐>100ml"] },
+            { title: "絕對禁止 (Forbidden)", icon: "ban", items: ["鉛酸電池", "易燃液體", "漂白水", "殺蟲劑"] }
+        ];
+
+        // --- 完整行程資料 (Day 1 Note Updated) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
@@ -124,7 +164,7 @@
                     },
                     { 
                         time: "17:20", type: "shop", title: "阪急百貨 梅田本店", address: "大阪府大阪市北区角田町8-7", nav: "Hankyu Umeda Main Store", tags: ["購物"], hours: "10:00-20:00",
-                        guide: ["必逛：B1 美食街伴手禮一級戰區。", "推薦：Baton d'or 高級Pocky、Grand Calbee。", "B1｜GRAND Calbee(洋芋片)／Sugar Butter Tree"],
+                        guide: ["必逛：B1 美食街伴手禮一級戰區。", "B1｜GRAND Calbee(洋芋片)／Sugar Butter Tree"],
                         about: { title: "交通指引", content: "M御堂筋線往箕面宣野方向「M16梅田」下車，南口改札口往左。" }
                     },
                     { 
@@ -351,7 +391,11 @@
                 phone: <i data-lucide="phone" className={className}></i>,
                 "external-link": <i data-lucide="external-link" className={className}></i>,
                 clock: <i data-lucide="clock" className={className}></i>,
-                refresh: <i data-lucide="refresh-cw" className={className}></i>
+                refresh: <i data-lucide="refresh-cw" className={className}></i>,
+                luggage: <i data-lucide="luggage" className={className}></i>,
+                briefcase: <i data-lucide="briefcase" className={className}></i>,
+                archive: <i data-lucide="archive" className={className}></i>,
+                ban: <i data-lucide="ban" className={className}></i>
             };
             return icons[name] || icons.info;
         };
@@ -618,7 +662,6 @@
                                             {selectedEvent.title}
                                         </h2>
                                         
-                                        {/* Modal Only: Clock with Icon (Smaller) */}
                                         {selectedEvent.hours && (
                                             <div className="flex items-center text-xs text-[#8f9eaf] font-bold mb-3">
                                                 <Icon name="clock" size={11} className="mr-1.5" />
@@ -815,12 +858,69 @@
                 </div>
             );
 
+            // --- 新增: 行李清單頁面 ---
+            const renderPacking = () => (
+                <div className="px-5 py-8 pb-32 animate-fade-in">
+                    <h2 className="text-xl font-serif font-bold text-[#57534e] mb-6 border-b pb-2 border-stone-200">行李準備</h2>
+                    
+                    {/* 禁止/限制攜帶提醒 */}
+                    <div className="space-y-3 mb-8">
+                        {forbiddenItems.map((rule, i) => (
+                            <div key={i} className="bg-white p-4 rounded-xl border border-stone-100 shadow-sm flex items-start">
+                                <div className={`p-2 rounded-full mr-3 flex-shrink-0 ${
+                                    i === 0 ? 'bg-blue-50 text-blue-500' : 
+                                    i === 1 ? 'bg-yellow-50 text-yellow-600' : 
+                                    'bg-red-50 text-red-500'
+                                }`}>
+                                    <Icon name={rule.icon} size={18} />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-bold text-[#57534e] mb-1">{rule.title}</h3>
+                                    <div className="flex flex-wrap gap-1">
+                                        {rule.items.map((item, idx) => (
+                                            <span key={idx} className="text-[10px] px-2 py-0.5 bg-[#fafaf9] text-[#a8a29e] rounded border border-stone-100">
+                                                {item}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* 行李清單 */}
+                    <div className="space-y-6">
+                        {Object.entries(packingList).map(([category, items]) => (
+                            <div key={category} className="bg-[#fdfcf8] rounded-xl border border-[#d6bd8d]/30 overflow-hidden">
+                                <div className="bg-[#d6bd8d]/10 px-4 py-2 border-b border-[#d6bd8d]/20">
+                                    <h3 className="font-bold text-[#9c8456] text-sm">{category}</h3>
+                                </div>
+                                <div className="p-4 grid grid-cols-2 gap-3">
+                                    {items.map((item, idx) => (
+                                        <label key={idx} className="flex items-center cursor-pointer group">
+                                            <input type="checkbox" className="custom-checkbox flex-shrink-0" />
+                                            <span className="text-sm text-[#57534e] group-hover:text-[#9cad95] transition-colors">{item}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
             return (
                 <div className="min-h-screen">
-                    {activeTab === 'schedule' ? renderSchedule() : renderInfo()}
-                    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#fdfcf8]/90 backdrop-blur-xl border border-stone-200 rounded-full px-8 py-4 flex items-center shadow-xl shadow-stone-200/50 z-40 space-x-10">
+                    {activeTab === 'schedule' ? renderSchedule() : activeTab === 'info' ? renderInfo() : renderPacking()}
+                    
+                    {/* Bottom Nav */}
+                    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#fdfcf8]/90 backdrop-blur-xl border border-stone-200 rounded-full px-8 py-4 flex items-center shadow-xl shadow-stone-200/50 z-40 space-x-8">
                         <button onClick={() => setActiveTab('schedule')} className={`flex flex-col items-center space-y-1 transition-colors ${activeTab === 'schedule' ? 'text-[#57534e]' : 'text-[#d6d3d1]'}`}>
                             <Icon name="calendar-days" size={22} />
+                        </button>
+                        <div className="w-px h-5 bg-stone-200"></div>
+                        <button onClick={() => setActiveTab('packing')} className={`flex flex-col items-center space-y-1 transition-colors ${activeTab === 'packing' ? 'text-[#57534e]' : 'text-[#d6d3d1]'}`}>
+                            <Icon name="luggage" size={22} />
                         </button>
                         <div className="w-px h-5 bg-stone-200"></div>
                         <button onClick={() => setActiveTab('info')} className={`flex flex-col items-center space-y-1 transition-colors ${activeTab === 'info' ? 'text-[#57534e]' : 'text-[#d6d3d1]'}`}>
