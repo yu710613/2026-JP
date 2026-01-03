@@ -15,9 +15,10 @@
 
     <style>
         :root {
-            --bg-color: #fdfcf8; /* 日式淺米色 (Washi Paper) */
+            --bg-color: #fdfcf8; /* 日式淺米色 */
             --card-bg: #ffffff;
-            --text-main: #44403c; /* 暖深灰 */
+            --text-main: #44403c;
+            --text-light: #78716c;
             --border-color: #e7e5e4;
         }
 
@@ -36,7 +37,7 @@
         .event-card {
             background: var(--card-bg);
             border-radius: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03); /* 輕柔陰影 */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             transition: transform 0.1s ease;
             position: relative;
             border: 1px solid #f5f5f4;
@@ -56,7 +57,7 @@
             top: 48px;
             bottom: -24px;
             width: 2px;
-            background-color: #e5e5e0; /* 配合米色的線條 */
+            background-color: #e5e5e0;
             z-index: 0;
         }
         .last-item .timeline-line { display: none; }
@@ -69,11 +70,6 @@
         .modal-enter {
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        
-        /* 高亮樣式 */
-        .hl-red { color: #dc2626; font-weight: 700; background-color: #fee2e2; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
-        .hl-blue { color: #2563eb; font-weight: 700; background-color: #dbeafe; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
-        .hl-amber { color: #d97706; font-weight: 700; background-color: #fef3c7; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
     </style>
 </head>
 <body>
@@ -82,7 +78,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- 24 小時天氣模擬邏輯 ---
+        // --- 24 小時天氣模擬 ---
         const generateHourlyWeather = (condition) => {
             const hours = [];
             const baseTemp = condition === "Sunny" ? 8 : (condition === "Cloudy" ? 6 : 5);
@@ -105,7 +101,7 @@
             return hours;
         };
 
-        // --- 完整行程資料 (含詳細地址) ---
+        // --- 完整行程資料 ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", temp: "6-10°C", condition: "Cloudy",
@@ -117,7 +113,7 @@
                     },
                     { 
                         time: "17:00", type: "hotel", title: "Check-in: 京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"],
-                        guide: ["北濱站 2號出口直達。", "先寄放行李與領取網購包裹。"],
+                        guide: ["交通：北濱站 2號出口直達。", "提醒：先寄放行李與領取網購包裹。"],
                         about: { title: "飯店位置", content: "位於京阪電車與地鐵堺筋線交會處，對於前往京都或大阪南區（難波/日本橋）都非常方便。" }
                     },
                     { 
@@ -126,20 +122,20 @@
                     },
                     { 
                         time: "17:50", type: "food", title: "grenier Umeda", address: "大阪府大阪市北区角田町8-47 阪急グランドビル 1F", nav: "grenier Umeda", tags: ["必吃", "排隊"],
-                        guide: ["★ 必點菜單：烤布蕾千層派 (ブリュレミルフィーユ)。", "排隊攻略：若人潮過多，可先逛同層樓雜貨。"],
+                        guide: ["必點菜單：烤布蕾千層派 (ブリュレミルフィーユ)。", "攻略：若人潮過多，可先逛同層樓雜貨。"],
                         about: { title: "店名由來", content: "Grenier 法文意為『閣樓』。店鋪設計充滿復古雜貨與溫暖甜點香氣，是梅田近年最紅的打卡甜點。" }
                     },
                     { 
                         time: "18:20", type: "shop", title: "LUCUA 1100 & LUCUA", address: "大阪府大阪市北区梅田3-1-3", nav: "LUCUA 1100", tags: ["購物"],
-                        guide: ["9F 蔦屋書店很有氛圍。", "B1 美食街選擇多且營業較晚。"]
+                        guide: ["重點：9F 蔦屋書店很有氛圍。", "美食：B1 美食街選擇多且營業較晚。"]
                     },
                     { 
                         time: "20:00", type: "shop", title: "Yodobashi / Links", address: "大阪府大阪市北区大深町1-1", nav: "Yodobashi Umeda", tags: ["購物"],
-                        guide: ["扭蛋區規模超大 (B1/5F)。", "電器滿額免稅 10% + 優惠券。"]
+                        guide: ["扭蛋區：規模超大 (B1/5F)。", "優惠：電器滿額免稅 10% + 優惠券。"]
                     },
                     { 
                         time: "21:00", type: "food", title: "Hanadako 章魚燒", address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", nav: "Hanadako Osaka", tags: ["必吃", "排隊"],
-                        guide: ["★ 必點：蔥花美乃滋章魚燒 (ネギマヨ)。", "特色：站著吃 (立食)，翻桌率快。"],
+                        guide: ["必點菜單：蔥花美乃滋章魚燒 (ネギマヨ)。", "特色：站著吃 (立食)，翻桌率快。"],
                         about: { title: "生章魚", content: "堅持使用未經冷凍的生章魚 (生タコ)，口感特別鮮嫩彈牙，與一般冷凍章魚完全不同。" }
                     },
                     { time: "22:00", type: "shop", title: "Book Studio", address: "大阪府大阪市北区梅田3-1-1 JR大阪駅構内", nav: "Book Studio Osaka", guide: ["購買旅遊書或文具。"] },
@@ -151,7 +147,7 @@
                 events: [ 
                     { 
                         time: "08:20", type: "sight", title: "難波八阪神社", address: "大阪府大阪市浪速区元町2-9-19", nav: "Namba Yasaka Shrine", tags: ["必拍", "求財"],
-                        guide: ["★ 必拍重點：高12公尺的巨大獅子殿。", "御守推薦：『獅子頭御守』。"],
+                        guide: ["必拍重點：高12公尺的巨大獅子殿。", "御守推薦：『獅子頭御守』。"],
                         about: { title: "獅子大開口", content: "據說獅子的大口能將參拜者的苦難與厄運一口吞下，並招喚勝利與機運 (勝運)。適合祈求學業進步與生意興隆。" }
                     },
                     { 
@@ -161,20 +157,20 @@
                     },
                     { 
                         time: "10:00", type: "food", title: "黑門市場", address: "大阪府大阪市中央区日本橋2-4-1", nav: "Kuromon Ichiba Market", tags: ["美食"],
-                        guide: ["推薦：現烤扇貝、海鮮串、豆漿。", "注意：部分老店僅收現金。"]
+                        guide: ["推薦美食：現烤扇貝、海鮮串、豆漿。", "注意：部分老店僅收現金。"]
                     },
-                    { time: "11:15", type: "sight", title: "固力果跑跑人", address: "大阪府大阪市中央区道頓堀1-10-2", nav: "Glico Man Sign", guide: ["最佳拍攝點：戎橋上。"] },
-                    { time: "11:30", type: "shop", title: "心齋橋筋商店街", address: "大阪府大阪市中央区心斎橋筋", nav: "Shinsaibashi-Suji", guide: ["藥妝比價、Uniqlo 旗艦店。"] },
+                    { time: "11:15", type: "sight", title: "固力果跑跑人", address: "大阪府大阪市中央区道頓堀1-10-2", nav: "Glico Man Sign", guide: ["攻略：最佳拍攝點在戎橋上。"] },
+                    { time: "11:30", type: "shop", title: "心齋橋筋商店街", address: "大阪府大阪市中央区心斎橋筋", nav: "Shinsaibashi-Suji", guide: ["重點：藥妝比價、Uniqlo 旗艦店。"] },
                     { 
                         time: "13:00", type: "food", title: "牛かつもと村", address: "大阪府大阪市中央区難波3-3-1", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["必吃", "排隊"],
-                        guide: ["★ 必點菜單：炸牛排定食 (130g)。", "吃法：石板上煎至喜歡熟度，沾芥末醬油。", "重要：建議提早 10 分鐘到店。"],
+                        guide: ["必點菜單：炸牛排定食 (130g)。", "吃法：石板上煎至喜歡熟度，沾芥末醬油。", "重要：建議提早 10 分鐘到店。"],
                         about: { title: "美味秘密", content: "只炸 60 秒的半熟牛肉，外酥內嫩，是日本炸牛排風潮的代表名店。" }
                     },
                     { time: "14:00", type: "food", title: "章魚燒道樂 Wanaka", address: "大阪府大阪市中央区道頓堀1-6-12", nav: "Takoyaki Wanaka Dotonbori", guide: ["道頓堀排隊點心。"] },
-                    { time: "14:15", type: "sight", title: "御津八幡宮", address: "大阪府大阪市中央区西心斎橋2-10-7", nav: "Mitsu Hachimangu", guide: ["美國村內的寧靜角落，有可愛的寵物御守。"] },
+                    { time: "14:15", type: "sight", title: "御津八幡宮", address: "大阪府大阪市中央区西心斎橋2-10-7", nav: "Mitsu Hachimangu", guide: ["特色：美國村內的寧靜角落，有可愛的寵物御守。"] },
                     { 
                         time: "14:45", type: "shop", title: "大丸心齋橋 / PARCO", address: "大阪府大阪市中央区心斎橋筋1-7-1", nav: "Daimaru Shinsaibashi", tags: ["必逛"],
-                        guide: ["6F 動漫層：吉卜力、寶可夢中心、JUMP SHOP。", "POP MART 在 PARCO。"]
+                        guide: ["6F 動漫層：吉卜力、寶可夢中心、JUMP SHOP。", "PARCO：POP MART 在隔壁 PARCO。"]
                     },
                     { 
                         time: "16:30", type: "shop", title: "美國村古著巡禮", address: "大阪府大阪市中央区西心斎橋", nav: "Americamura", tags: ["古著"],
@@ -186,10 +182,10 @@
                         time: "18:40", type: "shop", title: "阪急三番街", address: "大阪府大阪市北区芝田1-1-3", nav: "Hankyu Sanbangai", tags: ["購物"],
                         guide: ["推薦：Kiddy Land (玩具)、古著屋JAM (茶屋町店)。"]
                     },
-                    { time: "20:10", type: "shop", title: "HEP FIVE", address: "大阪府大阪市北区角田町5-15", nav: "HEP FIVE", guide: ["紅色摩天輪地標，年輕服飾品牌多。"] },
+                    { time: "20:10", type: "shop", title: "HEP FIVE", address: "大阪府大阪市北区角田町5-15", nav: "HEP FIVE", guide: ["地標：紅色摩天輪地標，年輕服飾品牌多。"] },
                     { 
                         time: "21:00", type: "food", title: "燒肉力丸", address: "大阪府大阪市北区小松原町4-32 北大阪東通りビル 3F", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦", "吃到飽"],
-                        guide: ["必點：厚切牛舌、橫膈膜。", "CP值極高的國產牛吃到飽。"]
+                        guide: ["必點：厚切牛舌、橫膈膜。", "特色：CP值極高的國產牛吃到飽。"]
                     }
                 ] 
             },
@@ -199,11 +195,11 @@
                     { time: "09:00", type: "sight", title: "大阪城", address: "大阪府大阪市中央区大阪城1-1", nav: "Osaka Castle", guide: ["晨間散步，天守閣拍照。"] },
                     { 
                         time: "10:00", type: "hotel", title: "Check-in: Vista Premio", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"],
-                        guide: ["移動至京都，先寄放行李。", "飯店位於市中心，逛街超方便。"]
+                        guide: ["移動：移動至京都，先寄放行李。", "位置：飯店位於市中心，逛街超方便。"]
                     },
                     { 
                         time: "11:15", type: "food", title: "三嶋亭 (高島屋店)", address: "京都市下京区四条通河原町西入真町52 7F", nav: "Mishima-tei Takashimaya Kyoto", tags: ["必吃", "百年老店"],
-                        guide: ["★ 攻略：這裡的午間套餐是本店半價，CP 值極高。", "吃法：關西式壽喜燒 (先煎後煮)。"],
+                        guide: ["攻略：這裡的午間套餐是本店半價，CP 值極高。", "吃法：關西式壽喜燒 (先煎後煮)。"],
                         about: { title: "百年歷史", content: "創業於明治 6 年 (1873年)，是京都最古老的壽喜燒專門店。堅持使用熟成黑毛和牛與獨家秘傳醬汁。" }
                     },
                     { 
@@ -217,7 +213,7 @@
                     { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", guide: ["動漫迷聖地。"] },
                     { 
                         time: "21:00", type: "food", title: "一蘭拉麵", address: "京都市中京区蛸薬師通新京極東入裏寺町598", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"],
-                        guide: ["完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"]
+                        guide: ["口味：完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"]
                     }
                 ] 
             },
@@ -226,7 +222,7 @@
                 events: [ 
                     { 
                         time: "07:30", type: "sight", title: "清水寺", address: "京都市東山区清水1-294", nav: "Kiyomizu-dera", tags: ["必去", "世界遺產"],
-                        guide: ["★ 攻略：早上 8 點前人潮最少。", "必做：到『音羽之瀧』接水喝 (學業/戀愛/長壽)。"],
+                        guide: ["攻略：早上 8 點前人潮最少。", "必做：到『音羽之瀧』接水喝 (學業/戀愛/長壽)。"],
                         about: { title: "清水舞台", content: "正殿依懸崖而建，由 139 根巨大櫸木支撐，結構中沒使用任何釘子，是日本傳統木造建築巔峰。" }
                     },
                     { 
@@ -252,13 +248,13 @@
                 events: [ 
                     { 
                         time: "07:00", type: "sight", title: "伏見稻荷大社", address: "京都市伏見区深草藪之内町68", nav: "Fushimi Inari Taisha", tags: ["必拍"],
-                        guide: ["★ 攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"],
+                        guide: ["攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"],
                         about: { title: "千本鳥居", content: "全日本三萬座稻荷神社總本宮。紅色鳥居是信徒供奉，象徵對神明保佑五穀豐收、生意興隆的感謝。" }
                     },
                     { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京区押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
                     { 
                         time: "11:00", type: "food", title: "麵屋優光", address: "京都市中京区場之町588", nav: "Menya Yukou", tags: ["必吃", "排隊"],
-                        guide: ["★ 必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"],
+                        guide: ["必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"],
                         about: { title: "職人精神", content: "店主曾在名店修業，堅持使用多種貝類熬製高湯，創造出充滿鮮味 (Umami) 卻清爽不油膩的新派京都拉麵。" }
                     },
                     { time: "12:00", type: "transport", title: "利木津巴士", address: "京都車站八條口", nav: "Kyoto Station Hachijoguchi Bus Stop", guide: ["前往關西機場 (KIX)。", "車程約 85 分鐘，不用搬行李轉車。"] },
@@ -297,6 +293,39 @@
             return icons[name] || icons.info;
         };
 
+        const GuideItem = ({ text }) => {
+            // 自動移除 "★" 並分割 "："
+            const cleanText = text.replace(/★/g, '').trim();
+            const splitIndex = cleanText.indexOf('：');
+            
+            if (splitIndex !== -1) {
+                const label = cleanText.substring(0, splitIndex);
+                const content = cleanText.substring(splitIndex + 1);
+                
+                let colorClass = "text-gray-700 font-bold";
+                if (label.includes("必") || label.includes("推")) colorClass = "text-rose-700 font-bold";
+                if (label.includes("攻略") || label.includes("注意") || label.includes("重點")) colorClass = "text-blue-700 font-bold";
+                if (label.includes("預約")) colorClass = "text-amber-700 font-bold";
+
+                return (
+                    <li className="flex items-start text-sm text-gray-600 leading-relaxed mb-3">
+                        <span className="text-gray-300 mr-2 mt-1 text-[10px] flex-shrink-0">●</span>
+                        <span>
+                            <span className={colorClass}>{label}</span>：{content}
+                        </span>
+                    </li>
+                );
+            }
+            
+            // 無冒號的普通項目
+            return (
+                <li className="flex items-start text-sm text-gray-600 leading-relaxed mb-3">
+                    <span className="text-gray-300 mr-2 mt-1 text-[10px] flex-shrink-0">●</span>
+                    <span>{cleanText}</span>
+                </li>
+            );
+        };
+
         const App = () => {
             const [selectedDay, setSelectedDay] = useState("Day 1");
             const [activeTab, setActiveTab] = useState("schedule");
@@ -306,20 +335,6 @@
 
             const handleNav = (loc) => {
                 window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}&travelmode=driving`, '_blank');
-            };
-
-            const parseGuideText = (text) => {
-                const keywords = ["必吃", "必買", "必點", "必拍", "預約", "攻略", "注意", "推薦", "★"];
-                const parts = text.split(new RegExp(`(${keywords.join('|')})`, 'g'));
-                return parts.map((part, index) => {
-                    if (keywords.includes(part)) {
-                        let colorClass = "hl-red";
-                        if (part === "預約" || part === "攻略") colorClass = "hl-blue";
-                        if (part === "推薦" || part === "★") colorClass = "hl-amber";
-                        return <span key={index} className={colorClass}>{part}</span>;
-                    }
-                    return part;
-                });
             };
 
             const renderSchedule = () => {
@@ -382,8 +397,6 @@
                                  return (
                                     <div key={index} className={`relative pl-12 ${isLast ? 'last-item' : ''}`}>
                                         <div className="timeline-line"></div>
-                                        
-                                        {/* Timeline Dot */}
                                         <div className="absolute left-0 top-6 flex flex-col items-center z-10 w-12 text-center">
                                             <span className="text-[10px] font-mono font-bold text-gray-400 mb-1 block">{event.time}</span>
                                             <div className={`w-3 h-3 rounded-full border-2 bg-white ${dotColor}`}></div>
@@ -455,16 +468,13 @@
                                         {/* Guide Note */}
                                         {selectedEvent.guide && (
                                             <div>
-                                                <div className="flex items-center space-x-2 mb-3">
+                                                <div className="flex items-center space-x-2 mb-4">
                                                     <i data-lucide="book-open" className="w-4 h-4 text-gray-400"></i>
-                                                    <h3 className="font-bold text-gray-800 text-sm tracking-wide">導遊筆記 GUIDE NOTE</h3>
+                                                    <h3 className="font-bold text-gray-800 text-sm tracking-wide">NOTE</h3>
                                                 </div>
-                                                <ul className="space-y-3 pl-1">
+                                                <ul className="pl-1">
                                                     {selectedEvent.guide.map((note, i) => (
-                                                        <li key={i} className="flex items-start text-sm text-gray-600 leading-7">
-                                                            <span className="text-gray-300 mr-3 mt-1.5 text-[8px]">●</span>
-                                                            <span>{parseGuideText(note)}</span>
-                                                        </li>
+                                                        <GuideItem key={i} text={note} />
                                                     ))}
                                                 </ul>
                                             </div>
@@ -487,14 +497,13 @@
                                         {selectedEvent.tags && (
                                             <div className="flex flex-wrap gap-2">
                                                 {selectedEvent.tags.map((tag, i) => (
-                                                    <span key={i} className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-500 bg-white">
+                                                    <span key={i} className="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-500 bg-white">
                                                         #{tag}
                                                     </span>
                                                 ))}
                                             </div>
                                         )}
                                         
-                                        {/* Spacer to prevent button blocking content */}
                                         <div className="h-32"></div>
                                     </div>
 
