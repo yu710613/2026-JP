@@ -16,28 +16,33 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #f5f5f4;
-            color: #44403c;
+            background-color: #f5f5f4; /* v12 的淺灰背景 */
+            color: #44403c; /* v12 的深灰文字 */
             -webkit-tap-highlight-color: transparent;
             padding-bottom: env(safe-area-inset-bottom);
         }
-        /* 統一襯線體樣式 */
-        .serif { font-family: 'Noto Serif JP', serif; }
         
+        .serif { font-family: 'Noto Serif JP', serif; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* 列表卡片 */
+        /* 列表卡片 (v12 風格) */
         .event-card {
             background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* v12 的輕盈陰影 */
             transition: transform 0.1s ease;
             position: relative;
             border: 1px solid white;
         }
         .event-card:active { transform: scale(0.98); background-color: #fafaf9; }
 
-        /* 時間軸 */
+        /* 天氣捲軸遮罩 */
+        .weather-scroll {
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        }
+
+        /* 時間軸線條 */
         .timeline-line {
             position: absolute;
             left: 24px;
@@ -49,7 +54,7 @@
         }
         .last-item .timeline-line { display: none; }
 
-        /* 彈窗動畫 */
+        /* 彈窗動畫 (Bottom Sheet) */
         @keyframes slideUp {
             0% { transform: translateY(100%); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
@@ -58,7 +63,7 @@
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         
-        /* 高亮樣式 */
+        /* 高亮樣式 (v12) */
         .hl-red { color: #dc2626; font-weight: 700; background-color: #fecaca; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-blue { color: #2563eb; font-weight: 700; background-color: #dbeafe; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-amber { color: #d97706; font-weight: 700; background-color: #fef3c7; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
@@ -70,7 +75,31 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- 行程資料庫 ---
+        // --- 24 小時天氣模擬邏輯 ---
+        const generateHourlyWeather = (condition) => {
+            const hours = [];
+            const baseTemp = condition === "Sunny" ? 8 : (condition === "Cloudy" ? 6 : 5);
+            for (let i = 6; i <= 23; i++) {
+                let temp = baseTemp;
+                let icon = "cloud";
+                // 簡單溫度曲線
+                if (i >= 11 && i <= 15) temp += 4;
+                else if (i >= 9 && i <= 17) temp += 2;
+                else temp -= 1;
+
+                if (condition === "Sunny") {
+                    icon = (i >= 18) ? "moon" : "sun";
+                } else if (condition === "Partly Cloudy") {
+                    icon = (i >= 18) ? "cloud-moon" : (i % 2 === 0 ? "cloud-sun" : "cloud");
+                } else {
+                    icon = "cloud";
+                }
+                hours.push({ time: `${i}:00`, temp: temp, icon: icon });
+            }
+            return hours;
+        };
+
+        // --- 完整行程資料 (含詳細地址) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", temp: "6-10°C", condition: "Cloudy",
@@ -81,33 +110,33 @@
                         about: { title: "接駁資訊", content: "搭乘南海電鐵『空港急行』前往天下茶屋站換乘堺筋線，是最省錢也最快到達北濱飯店的方式。" }
                     },
                     { 
-                        time: "17:00", type: "hotel", title: "Check-in: 京阪淀屋橋", address: "大阪市中央區北濱2-4-6", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"],
-                        guide: ["北濱站 2號出口。", "先寄放行李與領取網購包裹。"],
+                        time: "17:00", type: "hotel", title: "Check-in: 京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"],
+                        guide: ["北濱站 2號出口直達。", "先寄放行李與領取網購包裹。"],
                         about: { title: "飯店位置", content: "位於京阪電車與地鐵堺筋線交會處，對於前往京都或大阪南區（難波/日本橋）都非常方便。" }
                     },
                     { 
-                        time: "17:20", type: "shop", title: "阪急百貨", address: "大阪市北區角田町8-7", nav: "Hankyu Umeda Main Store", tags: ["購物"],
-                        guide: ["必逛：B1 美食街伴手禮一級戰區。", "推薦：Baton d'or 高級Pocky。"]
+                        time: "17:20", type: "shop", title: "阪急百貨 梅田本店", address: "大阪府大阪市北区角田町8-7", nav: "Hankyu Umeda Main Store", tags: ["購物"],
+                        guide: ["必逛：B1 美食街伴手禮一級戰區。", "推薦：Baton d'or 高級Pocky、Grand Calbee。"]
                     },
                     { 
-                        time: "17:50", type: "food", title: "grenier Umeda", address: "阪急 Grand Building 1F", nav: "grenier Umeda", tags: ["必吃", "排隊"],
+                        time: "17:50", type: "food", title: "grenier Umeda", address: "大阪府大阪市北区角田町8-47 阪急グランドビル 1F", nav: "grenier Umeda", tags: ["必吃", "排隊"],
                         guide: ["★ 必點菜單：烤布蕾千層派 (ブリュレミルフィーユ)。", "排隊攻略：若人潮過多，可先逛同層樓雜貨。"],
                         about: { title: "店名由來", content: "Grenier 法文意為『閣樓』。店鋪設計充滿復古雜貨與溫暖甜點香氣，是梅田近年最紅的打卡甜點。" }
                     },
                     { 
-                        time: "18:20", type: "shop", title: "LUCUA 1100 & LUCUA", address: "大阪市北區梅田3-1-3", nav: "LUCUA 1100", tags: ["購物"],
+                        time: "18:20", type: "shop", title: "LUCUA 1100 & LUCUA", address: "大阪府大阪市北区梅田3-1-3", nav: "LUCUA 1100", tags: ["購物"],
                         guide: ["9F 蔦屋書店很有氛圍。", "B1 美食街選擇多且營業較晚。"]
                     },
                     { 
-                        time: "20:00", type: "shop", title: "Yodobashi / Links", address: "大阪市北區大深町1-1", nav: "Yodobashi Umeda", tags: ["購物"],
+                        time: "20:00", type: "shop", title: "Yodobashi / Links", address: "大阪府大阪市北区大深町1-1", nav: "Yodobashi Umeda", tags: ["購物"],
                         guide: ["扭蛋區規模超大 (B1/5F)。", "電器滿額免稅 10% + 優惠券。"]
                     },
                     { 
-                        time: "21:00", type: "food", title: "Hanadako 章魚燒", address: "新梅田食道街 1F", nav: "Hanadako Osaka", tags: ["必吃", "排隊"],
+                        time: "21:00", type: "food", title: "Hanadako 章魚燒", address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", nav: "Hanadako Osaka", tags: ["必吃", "排隊"],
                         guide: ["★ 必點：蔥花美乃滋章魚燒 (ネギマヨ)。", "特色：站著吃 (立食)，翻桌率快。"],
                         about: { title: "生章魚", content: "堅持使用未經冷凍的生章魚 (生タコ)，口感特別鮮嫩彈牙，與一般冷凍章魚完全不同。" }
                     },
-                    { time: "22:00", type: "shop", title: "Book Studio", address: "新大阪站內", nav: "Book Studio Osaka", guide: ["購買旅遊書或文具。"] },
+                    { time: "22:00", type: "shop", title: "Book Studio", address: "大阪府大阪市北区梅田3-1-1 JR大阪駅構内", nav: "Book Studio Osaka", guide: ["購買旅遊書或文具。"] },
                     { time: "22:30", type: "transport", title: "回飯店休息", address: "Hotel Keihan Yodoyabashi", nav: "Hotel Keihan Yodoyabashi", guide: ["養精蓄銳。"] }
                 ] 
             },
@@ -115,45 +144,45 @@
                 date: "1/12", weekday: "Mon", area: "難波心齋橋", temp: "5-9°C", condition: "Sunny",
                 events: [ 
                     { 
-                        time: "08:20", type: "sight", title: "難波八阪神社", address: "大阪市浪速區元町2-9-19", nav: "Namba Yasaka Shrine", tags: ["必拍", "求財"],
+                        time: "08:20", type: "sight", title: "難波八阪神社", address: "大阪府大阪市浪速区元町2-9-19", nav: "Namba Yasaka Shrine", tags: ["必拍", "求財"],
                         guide: ["★ 必拍重點：高12公尺的巨大獅子殿。", "御守推薦：『獅子頭御守』。"],
                         about: { title: "獅子大開口", content: "據說獅子的大口能將參拜者的苦難與厄運一口吞下，並招喚勝利與機運 (勝運)。適合祈求學業進步與生意興隆。" }
                     },
                     { 
-                        time: "09:30", type: "food", title: "Galette au Beurre", address: "高島屋大阪店 B1F", nav: "Galette au Beurre Takashimaya Osaka", tags: ["伴手禮", "高島屋限定"],
+                        time: "09:30", type: "food", title: "Galette au Beurre", address: "大阪府大阪市中央区難波5-1-5 大阪タカシマヤ B1F", nav: "Galette au Beurre Takashimaya Osaka", tags: ["伴手禮", "高島屋限定"],
                         guide: ["必買伴手禮：經典原味厚奶油餅乾 (Galette Bretonne)。", "注意：鐵盒款非常搶手，建議開店即去。"],
                         about: { title: "品牌背景", content: "由知名甜點大廠 Morozoff 打造的高級奶油點心品牌，主打使用法國產 A.O.P. 發酵奶油。" }
                     },
                     { 
-                        time: "10:00", type: "food", title: "黑門市場", address: "大阪市中央區日本橋2-4-1", nav: "Kuromon Ichiba Market", tags: ["美食"],
+                        time: "10:00", type: "food", title: "黑門市場", address: "大阪府大阪市中央区日本橋2-4-1", nav: "Kuromon Ichiba Market", tags: ["美食"],
                         guide: ["推薦：現烤扇貝、海鮮串、豆漿。", "注意：部分老店僅收現金。"]
                     },
-                    { time: "11:15", type: "sight", title: "固力果跑跑人", address: "道頓堀戎橋", nav: "Glico Man Sign", guide: ["最佳拍攝點：戎橋上。"] },
-                    { time: "11:30", type: "shop", title: "心齋橋筋商店街", address: "心齋橋筋", nav: "Shinsaibashi-Suji", guide: ["藥妝比價、Uniqlo 旗艦店。"] },
+                    { time: "11:15", type: "sight", title: "固力果跑跑人", address: "大阪府大阪市中央区道頓堀1-10-2", nav: "Glico Man Sign", guide: ["最佳拍攝點：戎橋上。"] },
+                    { time: "11:30", type: "shop", title: "心齋橋筋商店街", address: "大阪府大阪市中央区心斎橋筋", nav: "Shinsaibashi-Suji", guide: ["藥妝比價、Uniqlo 旗艦店。"] },
                     { 
-                        time: "13:00", type: "food", title: "牛かつもと村", address: "大阪市中央區難波3-3-1", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["必吃", "排隊"],
+                        time: "13:00", type: "food", title: "牛かつもと村", address: "大阪府大阪市中央区難波3-3-1", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["必吃", "排隊"],
                         guide: ["★ 必點菜單：炸牛排定食 (130g)。", "吃法：石板上煎至喜歡熟度，沾芥末醬油。", "重要：建議提早 10 分鐘到店。"],
                         about: { title: "美味秘密", content: "只炸 60 秒的半熟牛肉，外酥內嫩，是日本炸牛排風潮的代表名店。" }
                     },
-                    { time: "14:00", type: "food", title: "章魚燒道樂 Wanaka", address: "道頓堀", nav: "Takoyaki Wanaka Dotonbori", guide: ["道頓堀排隊點心。"] },
-                    { time: "14:15", type: "sight", title: "御津八幡宮", address: "美國村", nav: "Mitsu Hachimangu", guide: ["美國村內的寧靜角落，有可愛的寵物御守。"] },
+                    { time: "14:00", type: "food", title: "章魚燒道樂 Wanaka", address: "大阪府大阪市中央区道頓堀1-6-12", nav: "Takoyaki Wanaka Dotonbori", guide: ["道頓堀排隊點心。"] },
+                    { time: "14:15", type: "sight", title: "御津八幡宮", address: "大阪府大阪市中央区西心斎橋2-10-7", nav: "Mitsu Hachimangu", guide: ["美國村內的寧靜角落，有可愛的寵物御守。"] },
                     { 
-                        time: "14:45", type: "shop", title: "大丸心齋橋 / PARCO", address: "心齋橋筋1-7-1", nav: "Daimaru Shinsaibashi", tags: ["必逛"],
+                        time: "14:45", type: "shop", title: "大丸心齋橋 / PARCO", address: "大阪府大阪市中央区心斎橋筋1-7-1", nav: "Daimaru Shinsaibashi", tags: ["必逛"],
                         guide: ["6F 動漫層：吉卜力、寶可夢中心、JUMP SHOP。", "POP MART 在 PARCO。"]
                     },
                     { 
-                        time: "16:30", type: "shop", title: "美國村古著巡禮", address: "西心齋橋", nav: "Americamura", tags: ["古著"],
+                        time: "16:30", type: "shop", title: "美國村古著巡禮", address: "大阪府大阪市中央区西心斎橋", nav: "Americamura", tags: ["古著"],
                         guide: ["重點店鋪：Kinji (大型連鎖)、Kindal (品牌古著)、元祖どないや (章魚燒)。"],
                         about: { title: "大阪原宿", content: "美國村是大阪年輕潮流文化的發源地，充滿了古著店、唱片行與街頭塗鴉。" }
                     },
-                    { time: "18:00", type: "shop", title: "相機的大林", address: "大阪梅田", nav: "Camera no Ohbayashi", guide: ["攝影迷必逛，中古鏡頭豐富。"] },
+                    { time: "18:00", type: "shop", title: "相機的大林", address: "大阪府大阪市北区梅田1-11-4 大阪駅前第4ビル 1F", nav: "Camera no Ohbayashi", guide: ["攝影迷必逛，中古鏡頭豐富。"] },
                     { 
-                        time: "18:40", type: "shop", title: "阪急三番街", address: "梅田", nav: "Hankyu Sanbangai", tags: ["購物"],
+                        time: "18:40", type: "shop", title: "阪急三番街", address: "大阪府大阪市北区芝田1-1-3", nav: "Hankyu Sanbangai", tags: ["購物"],
                         guide: ["推薦：Kiddy Land (玩具)、古著屋JAM (茶屋町店)。"]
                     },
-                    { time: "20:10", type: "shop", title: "HEP FIVE", address: "梅田", nav: "HEP FIVE", guide: ["紅色摩天輪地標，年輕服飾品牌多。"] },
+                    { time: "20:10", type: "shop", title: "HEP FIVE", address: "大阪府大阪市北区角田町5-15", nav: "HEP FIVE", guide: ["紅色摩天輪地標，年輕服飾品牌多。"] },
                     { 
-                        time: "21:00", type: "food", title: "燒肉力丸", address: "梅田東通", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦", "吃到飽"],
+                        time: "21:00", type: "food", title: "燒肉力丸", address: "大阪府大阪市北区小松原町4-32 北大阪東通りビル 3F", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦", "吃到飽"],
                         guide: ["必點：厚切牛舌、橫膈膜。", "CP值極高的國產牛吃到飽。"]
                     }
                 ] 
@@ -161,27 +190,27 @@
             "Day 3": { 
                 date: "1/13", weekday: "Tue", area: "大阪 -> 京都", temp: "4-8°C", condition: "Cloudy",
                 events: [ 
-                    { time: "09:00", type: "sight", title: "大阪城", address: "大阪市中央區大阪城", nav: "Osaka Castle", guide: ["晨間散步，天守閣拍照。"] },
+                    { time: "09:00", type: "sight", title: "大阪城", address: "大阪府大阪市中央区大阪城1-1", nav: "Osaka Castle", guide: ["晨間散步，天守閣拍照。"] },
                     { 
-                        time: "10:00", type: "hotel", title: "Check-in: Vista Premio", address: "京都市中京區六角通", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"],
+                        time: "10:00", type: "hotel", title: "Check-in: Vista Premio", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"],
                         guide: ["移動至京都，先寄放行李。", "飯店位於市中心，逛街超方便。"]
                     },
                     { 
-                        time: "11:15", type: "food", title: "三嶋亭 (高島屋店)", address: "京都高島屋 7F", nav: "Mishima-tei Takashimaya Kyoto", tags: ["必吃", "百年老店"],
+                        time: "11:15", type: "food", title: "三嶋亭 (高島屋店)", address: "京都市下京区四条通河原町西入真町52 7F", nav: "Mishima-tei Takashimaya Kyoto", tags: ["必吃", "百年老店"],
                         guide: ["★ 攻略：這裡的午間套餐是本店半價，CP 值極高。", "吃法：關西式壽喜燒 (先煎後煮)。"],
                         about: { title: "百年歷史", content: "創業於明治 6 年 (1873年)，是京都最古老的壽喜燒專門店。堅持使用熟成黑毛和牛與獨家秘傳醬汁。" }
                     },
                     { 
-                        time: "12:45", type: "sight", title: "嵐山半日遊", address: "京都市右京區嵐山", nav: "Arashiyama Bamboo Grove", tags: ["必拍"],
+                        time: "12:45", type: "sight", title: "嵐山半日遊", address: "京都府京都市右京区嵐山", nav: "Arashiyama Bamboo Grove", tags: ["必拍"],
                         guide: ["推薦路線：常寂光寺 -> 竹林小徑 -> 野宮神社 -> 天龍寺 -> 渡月橋。", "必喝：% ARABICA 咖啡 (渡月橋旁)。"]
                     },
                     { 
-                        time: "17:00", type: "shop", title: "河原町購物", address: "四條河原町", nav: "Shijo Kawaramachi", 
+                        time: "17:00", type: "shop", title: "河原町購物", address: "京都府京都市下京区四条通河原町", nav: "Shijo Kawaramachi", 
                         guide: ["Pokemon Center Kyoto (高島屋 2F)。", "SOU・SOU 本店 (日式足袋)。", "Marimekko 京都店。"]
                     },
-                    { time: "20:00", type: "shop", title: "Animate Kyoto", address: "河原町", nav: "Animate Kyoto", guide: ["動漫迷聖地。"] },
+                    { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", guide: ["動漫迷聖地。"] },
                     { 
-                        time: "21:00", type: "food", title: "一蘭拉麵", address: "京都河原町店", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"],
+                        time: "21:00", type: "food", title: "一蘭拉麵", address: "京都市中京区蛸薬師通新京極東入裏寺町598", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"],
                         guide: ["完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"]
                     }
                 ] 
@@ -190,24 +219,24 @@
                 date: "1/14", weekday: "Wed", area: "京都深度遊", temp: "7°C", condition: "Partly Cloudy",
                 events: [ 
                     { 
-                        time: "07:30", type: "sight", title: "清水寺", address: "京都市東山區清水1-294", nav: "Kiyomizu-dera", tags: ["必去", "世界遺產"],
+                        time: "07:30", type: "sight", title: "清水寺", address: "京都市東山区清水1-294", nav: "Kiyomizu-dera", tags: ["必去", "世界遺產"],
                         guide: ["★ 攻略：早上 8 點前人潮最少。", "必做：到『音羽之瀧』接水喝 (學業/戀愛/長壽)。"],
                         about: { title: "清水舞台", content: "正殿依懸崖而建，由 139 根巨大櫸木支撐，結構中沒使用任何釘子，是日本傳統木造建築巔峰。" }
                     },
                     { 
-                        time: "09:30", type: "shop", title: "清水坂 / 產寧坂", address: "清水坂", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"],
+                        time: "09:30", type: "shop", title: "清水坂 / 產寧坂", address: "京都市東山区清水2-256", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"],
                         guide: ["必買：MALEBRANCHE 茶之菓 (抹茶餅乾)。", "必逛：七味家本舖 (七味粉)、SOU・SOU 清水店。"]
                     },
-                    { time: "11:30", type: "sight", title: "八阪庚申堂", address: "東山區", nav: "Yasaka Koshin-do", guide: ["色彩繽紛的束猿 (結緣猴)，IG 打卡熱點。"] },
-                    { time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "祇園", nav: "Gion Unagi Kawatō", guide: ["午餐推薦：鰻魚飯三吃。"] },
-                    { time: "13:30", type: "shop", title: "Miffy's Kitchen", address: "祇園", nav: "Miffy's Kitchen Gion", guide: ["米飛兔造型麵包。", "順道去祇園白川散步。"] },
-                    { time: "14:30", type: "sight", title: "下鴨神社", address: "左京區", nav: "Shimogamo Shrine", guide: ["糺之森散步。", "河合神社：祈求美麗的鏡繪馬。"] },
+                    { time: "11:30", type: "sight", title: "八阪庚申堂", address: "京都市東山区金園町390", nav: "Yasaka Koshin-do", guide: ["色彩繽紛的束猿 (結緣猴)，IG 打卡熱點。"] },
+                    { time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山区祇園町南側", nav: "Gion Unagi Kawatō", guide: ["午餐推薦：鰻魚飯三吃。"] },
+                    { time: "13:30", type: "shop", title: "Miffy's Kitchen", address: "京都市東山区祇園町北側244", nav: "Miffy's Kitchen Gion", guide: ["米飛兔造型麵包。", "順道去祇園白川散步。"] },
+                    { time: "14:30", type: "sight", title: "下鴨神社", address: "京都市左京区下鴨泉川町59", nav: "Shimogamo Shrine", guide: ["糺之森散步。", "河合神社：祈求美麗的鏡繪馬。"] },
                     { 
-                        time: "16:30", type: "shop", title: "河原町雜貨巡禮", address: "河原町三條", nav: "Angers Kawaramachi", tags: ["必逛"],
+                        time: "16:30", type: "shop", title: "河原町雜貨巡禮", address: "京都市中京区河原町三条上ル西側", nav: "Angers Kawaramachi", tags: ["必逛"],
                         guide: ["重點店鋪：ANGERS (文具雜貨)、MoMA Design Store、HUMAN MADE 1928、Today's Special。"]
                     },
                     { 
-                        time: "20:00", type: "food", title: "六角ace", address: "中京區", nav: "Rokkaku Ace", tags: ["推薦", "需預約"],
+                        time: "20:00", type: "food", title: "六角ace", address: "京都市中京区大阪材木町696-4", nav: "Rokkaku Ace", tags: ["推薦", "需預約"],
                         guide: ["人氣創意居酒屋，氣氛熱鬧。", "必點：水果沙瓦、特色關東煮。"]
                     }
                 ] 
@@ -216,13 +245,13 @@
                 date: "1/15", weekday: "Thu", area: "返程", temp: "8°C", condition: "Sunny",
                 events: [ 
                     { 
-                        time: "07:00", type: "sight", title: "伏見稻荷大社", address: "京都市伏見區", nav: "Fushimi Inari Taisha", tags: ["必拍"],
+                        time: "07:00", type: "sight", title: "伏見稻荷大社", address: "京都市伏見区深草藪之内町68", nav: "Fushimi Inari Taisha", tags: ["必拍"],
                         guide: ["★ 攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"],
                         about: { title: "千本鳥居", content: "全日本三萬座稻荷神社總本宮。紅色鳥居是信徒供奉，象徵對神明保佑五穀豐收、生意興隆的感謝。" }
                     },
-                    { time: "10:00", type: "sight", title: "御金神社", address: "中京區", nav: "Mikane Shrine", tags: ["求財"], guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
+                    { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京区押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
                     { 
-                        time: "11:00", type: "food", title: "麵屋優光", address: "中京區", nav: "Menya Yukou", tags: ["必吃", "排隊"],
+                        time: "11:00", type: "food", title: "麵屋優光", address: "京都市中京区場之町588", nav: "Menya Yukou", tags: ["必吃", "排隊"],
                         guide: ["★ 必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"],
                         about: { title: "職人精神", content: "店主曾在名店修業，堅持使用多種貝類熬製高湯，創造出充滿鮮味 (Umami) 卻清爽不油膩的新派京都拉麵。" }
                     },
@@ -236,6 +265,31 @@
             { name: "ホテル京阪淀屋橋", date: "1/11-1/13", address: "大阪府大阪市中央区北浜2-4-6", tel: "06-6229-0321", nav: "Hotel Keihan Yodoyabashi" },
             { name: "ホテルビスタプレミオ京都 和邸", date: "1/13-1/15", address: "京都市中京区六角通新町西入", tel: "075-252-1666", nav: "Hotel Vista Premio Kyoto Nagomitei" }
         ];
+
+        const Icon = ({ name, size = 18, className }) => {
+            const icons = {
+                plane: <i data-lucide="plane" className={className}></i>,
+                hotel: <i data-lucide="bed-double" className={className}></i>,
+                shop: <i data-lucide="shopping-bag" className={className}></i>,
+                food: <i data-lucide="utensils" className={className}></i>,
+                sight: <i data-lucide="camera" className={className}></i>,
+                transport: <i data-lucide="train" className={className}></i>,
+                map: <i data-lucide="map-pin" className={className}></i>,
+                info: <i data-lucide="info" className={className}></i>,
+                sun: <i data-lucide="sun" className={className}></i>,
+                cloud: <i data-lucide="cloud" className={className}></i>,
+                "cloud-sun": <i data-lucide="cloud-sun" className={className}></i>,
+                "cloud-moon": <i data-lucide="cloud-moon" className={className}></i>,
+                moon: <i data-lucide="moon" className={className}></i>,
+                "arrow-right": <i data-lucide="arrow-right" className={className}></i>,
+                x: <i data-lucide="x" className={className}></i>,
+                "book-open": <i data-lucide="book-open" className={className}></i>,
+                sparkles: <i data-lucide="sparkles" className={className}></i>,
+                navigation: <i data-lucide="navigation" className={className}></i>,
+                "calendar-days": <i data-lucide="calendar-days" className={className}></i>
+            };
+            return icons[name] || icons.info;
+        };
 
         const App = () => {
             const [selectedDay, setSelectedDay] = useState("Day 1");
@@ -264,12 +318,12 @@
 
             const renderSchedule = () => {
                 const currentData = itineraryData[selectedDay];
-                
+                const hourlyWeather = generateHourlyWeather(currentData.condition);
+
                 return (
-                    <div className="pb-24 animate-fade-in">
+                    <div className="pb-32 animate-fade-in">
                         {/* Header */}
                         <div className="sticky top-0 z-20 bg-[#f5f5f4]/95 backdrop-blur-sm pt-4 pb-3 border-b border-gray-200">
-                            {/* Adjusted Title: smaller and serif */}
                             <h1 className="text-center text-lg serif font-bold text-[#44403c] mb-3 tracking-[0.2em]">2026 京阪旅行</h1>
                             <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 pb-1">
                                 {Object.keys(itineraryData).map(day => (
@@ -289,17 +343,19 @@
                             </div>
                         </div>
 
-                        {/* Weather Summary */}
+                        {/* 24-Hour Weather Scroll (v13 style) */}
                         <div className="px-5 mt-6 mb-2">
-                            <div className="flex items-center justify-between text-gray-500 text-xs font-medium bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
-                                <div className="flex items-center">
-                                    <i data-lucide="map-pin" className="w-3 h-3 mr-1"></i>
-                                    {currentData.area}
-                                </div>
-                                <div className="flex items-center">
-                                    <span className="mr-2">{currentData.condition}</span>
-                                    <span className="font-bold text-gray-800">{currentData.temp}</span>
-                                </div>
+                            <h2 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">Hourly Forecast</h2>
+                            <div className="flex space-x-6 overflow-x-auto hide-scrollbar weather-scroll pb-2">
+                                {hourlyWeather.map((h, i) => (
+                                    <div key={i} className="flex flex-col items-center flex-shrink-0 text-gray-600">
+                                        <span className="text-[10px] font-medium opacity-60 mb-1">{h.time}</span>
+                                        <div className="text-gray-400 mb-1">
+                                            <Icon name={h.icon} size={20} />
+                                        </div>
+                                        <span className="text-sm font-bold">{h.temp}°</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
@@ -338,7 +394,6 @@
                                                             {event.type.toUpperCase()}
                                                         </span>
                                                     </div>
-                                                    {/* Same serif font class used here for attraction titles */}
                                                     <h3 className="text-base font-bold text-gray-800 serif leading-tight mb-1">
                                                         {event.title}
                                                     </h3>
@@ -382,7 +437,7 @@
                                         <h2 className="text-2xl font-serif font-bold text-gray-800 leading-tight mb-2">
                                             {selectedEvent.title}
                                         </h2>
-                                        <div className="flex items-start text-xs text-gray-500 bg-gray-50 p-2 rounded-lg">
+                                        <div className="flex items-start text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
                                             <i data-lucide="map-pin" className="w-3 h-3 mr-2 mt-0.5 flex-shrink-0"></i>
                                             <span className="leading-relaxed">{selectedEvent.address}</span>
                                         </div>
@@ -454,7 +509,7 @@
             };
 
             const renderInfo = () => (
-                <div className="px-5 py-8 pb-24 animate-fade-in">
+                <div className="px-5 py-8 pb-32 animate-fade-in">
                     <h2 className="text-xl font-serif font-bold text-gray-800 mb-6 border-b pb-2 border-gray-200">旅程資訊</h2>
                     {hotelInfos.map((hotel, i) => (
                         <div key={i} className="event-card p-5 mb-4" onClick={() => handleNav(hotel.nav)}>
