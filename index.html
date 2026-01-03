@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>2026 京阪旅行 | Travel Guide</title>
     
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -600,6 +605,7 @@
                                             {selectedEvent.title}
                                         </h2>
                                         
+                                        {/* Modal Only: Clock with Icon (Smaller) */}
                                         {selectedEvent.hours && (
                                             <div className="flex items-center text-xs text-[#8f9eaf] font-bold mb-3">
                                                 <Icon name="clock" size={11} className="mr-1.5" />
