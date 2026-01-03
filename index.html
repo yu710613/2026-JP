@@ -132,238 +132,788 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 行李清單資料 ---
+        // --- 行李清單資料 (已移除手機) ---
         const packingList = {
-            "重要證件": ["護照", "身分證", "電子簽證/紙本簽證", "登機證/機票證明", "保險卡", "信用卡", "日幣現金", "台幣千元鈔(備用)", "駕照/譯本", "交通卡/周遊券"],
-            "3C 產品": ["耳機", "SIM卡/eSIM", "充電器(各類)", "相機", "萬國插頭", "記憶卡/備用電池", "自拍棒/腳架(管徑<1cm)", "行動電源(不可超過2個)"],
-            "生活用品": ["盥洗用品(分裝)", "牙刷/牙線", "常備藥品", "衛生紙/濕紙巾", "保養品", "隱形眼鏡/藥水", "折疊雨傘", "生理用品", "吹風機/離子夾", "刮鬍刀"],
-            "衣物": ["上衣", "下身", "內衣褲", "睡衣", "發熱衣/褲", "襪子", "外套", "帽子", "飾品", "好走的鞋"],
-            "其他": ["口罩", "太陽眼鏡", "拖鞋", "隨身小包", "購物袋"]
+            "重要證件": [
+                "護照", 
+                "身分證", 
+                "電子簽證/紙本簽證", 
+                "登機證/機票證明", 
+                "保險卡", 
+                "信用卡", 
+                "日幣現金", 
+                "台幣千元鈔(備用)", 
+                "駕照/譯本", 
+                "交通卡/周遊券"
+            ],
+            "3C 產品": [
+                "耳機", 
+                "SIM卡/eSIM", 
+                "充電器(各類)", 
+                "相機", 
+                "萬國插頭", 
+                "記憶卡/備用電池", 
+                "自拍棒/腳架(管徑<1cm)", 
+                "行動電源(不可超過2個)"
+            ],
+            "生活用品": [
+                "盥洗用品(分裝)", 
+                "牙刷/牙線", 
+                "常備藥品", 
+                "衛生紙/濕紙巾", 
+                "保養品", 
+                "隱形眼鏡/藥水", 
+                "折疊雨傘", 
+                "生理用品", 
+                "吹風機/離子夾", 
+                "刮鬍刀"
+            ],
+            "衣物": [
+                "上衣", 
+                "下身", 
+                "內衣褲", 
+                "睡衣", 
+                "發熱衣/褲", 
+                "襪子", 
+                "外套", 
+                "帽子", 
+                "飾品", 
+                "好走的鞋"
+            ],
+            "其他": [
+                "口罩", 
+                "太陽眼鏡", 
+                "拖鞋", 
+                "隨身小包", 
+                "購物袋"
+            ]
         };
 
         const forbiddenItems = [
-            { title: "隨身攜帶 (Hand Carry)", icon: "briefcase", items: ["行動電源", "鋰電池", "打火機(限1個)", "液體<100ml(裝透明袋)"] },
-            { title: "必須託運 (Check-in)", icon: "archive", items: ["刀具/剪刀", "腳架>60cm", "液體>100ml", "噴霧罐>100ml"] },
-            { title: "絕對禁止 (Forbidden)", icon: "ban", items: ["鉛酸電池", "易燃液體", "漂白水", "殺蟲劑"] }
+            { 
+                title: "隨身攜帶 (Hand Carry)", 
+                icon: "briefcase", 
+                items: ["行動電源", "鋰電池", "打火機(限1個)", "液體<100ml(裝透明袋)"] 
+            },
+            { 
+                title: "必須託運 (Check-in)", 
+                icon: "archive", 
+                items: ["刀具/剪刀", "腳架>60cm", "液體>100ml", "噴霧罐>100ml"] 
+            },
+            { 
+                title: "絕對禁止 (Forbidden)", 
+                icon: "ban", 
+                items: ["鉛酸電池", "易燃液體", "漂白水", "殺蟲劑"] 
+            }
         ];
 
-        // --- 完整行程資料 (Day 1 Swapped) ---
+        // --- 完整行程資料 ---
         const itineraryData = {
             "Day 1": { 
-                date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
+                date: "1/11", 
+                weekday: "Sun", 
+                area: "大阪梅田", 
+                lat: 34.7025, 
+                lon: 135.4959,
                 events: [ 
                     { 
-                        time: "14:55", type: "transport", title: "關西機場 (KIX)", address: "大阪府泉佐野市泉州空港北1", nav: "Kansai International Airport", hours: "24H",
+                        time: "14:55", 
+                        type: "transport", 
+                        title: "關西機場 (KIX)", 
+                        address: "大阪府泉佐野市泉州空港北1", 
+                        nav: "Kansai International Airport", 
+                        hours: "24H",
                         guide: ["入境審查請預留 60-90 分鐘。", "請提前截圖 Visit Japan Web 的 QR Code。", "領取行李後，前往 2F 搭乘南海電鐵。"],
                         about: { title: "接駁資訊", content: "搭乘南海電鐵『空港急行』前往天下茶屋站換乘堺筋線，是最省錢也最快到達北濱飯店的方式。" }
                     },
                     { 
-                        time: "17:00", type: "hotel", title: "ホテル京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"], hours: "Check-in 15:00",
+                        time: "17:00", 
+                        type: "hotel", 
+                        title: "ホテル京阪淀屋橋", 
+                        address: "大阪府大阪市中央区北浜2-4-6", 
+                        nav: "Hotel Keihan Yodoyabashi", 
+                        tags: ["住宿"], 
+                        hours: "Check-in 15:00",
                         guide: ["交通：北濱站 2號出口直達。", "提醒：先寄放行李與領取網購包裹。"],
                         about: { title: "交通指引", content: "南海電鐵往難波方向「NK05 天下茶屋」下車，轉堺筋線往高槻市方向「K14北濱站」下車。" }
                     },
                     { 
-                        time: "17:20", type: "shop", title: "阪急百貨 梅田本店", address: "大阪府大阪市北区角田町8-7", nav: "Hankyu Umeda Main Store", tags: ["購物"], hours: "10:00-20:00",
+                        time: "17:20", 
+                        type: "shop", 
+                        title: "阪急百貨 梅田本店", 
+                        address: "大阪府大阪市北区角田町8-7", 
+                        nav: "Hankyu Umeda Main Store", 
+                        tags: ["購物"], 
+                        hours: "10:00-20:00",
                         guide: ["必逛：B1 美食街伴手禮一級戰區。", "B1｜GRAND Calbee(洋芋片)／Sugar Butter Tree"],
                         about: { title: "交通指引", content: "M御堂筋線往箕面宣野方向「M16梅田」下車，南口改札口往左。" }
                     },
                     { 
-                        time: "17:50", type: "food", title: "grenier Umeda", address: "大阪府大阪市北区角田町8-47 阪急グランドビル 1F", nav: "grenier Umeda", tags: ["必吃", "排隊"], hours: "10:00-20:00",
+                        time: "17:50", 
+                        type: "food", 
+                        title: "grenier Umeda", 
+                        address: "大阪府大阪市北区角田町8-47 阪急グランドビル 1F", 
+                        nav: "grenier Umeda", 
+                        tags: ["必吃", "排隊"], 
+                        hours: "10:00-20:00",
                         guide: ["必點菜單：烤布蕾千層派 (ブリュレミルフィーユ)。", "攻略：若人潮過多，可先逛同層樓雜貨。"],
                         about: { title: "位置資訊", content: "位於「阪急SUN廣場」。Grenier 法文意為『閣樓』。" }
                     },
                     { 
-                        time: "18:20", type: "shop", title: "LUCUA 1100", address: "大阪府大阪市北区梅田3-1-3", nav: "LUCUA 1100", tags: ["購物"], hours: "10:30-20:30",
+                        time: "18:20", 
+                        type: "shop", 
+                        title: "LUCUA 1100", 
+                        address: "大阪府大阪市北区梅田3-1-3", 
+                        nav: "LUCUA 1100", 
+                        tags: ["購物"], 
+                        hours: "10:30-20:30",
                         guide: ["B1｜uniqlo ／GU／nutural kitchen", "1F｜三麗鷗", "2F｜米菲兔／JO MALONE／DIPTYQUE", "3F｜Aēsop／@cosme", "5F｜Disney Store／afternoon tea living", "6F｜ABC MART", "7F｜Unico (家居雜貨)", "8F｜北臉男裝"],
                         about: { title: "交通指引", content: "可由阪急百貨2F聯通橋前往。" }
                     },
                     { 
-                        time: "18:50", type: "shop", title: "LUCUA", address: "大阪府大阪市北区梅田3-1-3", nav: "LUCUA", tags: ["購物"], hours: "10:30-20:30",
+                        time: "18:50", 
+                        type: "shop", 
+                        title: "LUCUA", 
+                        address: "大阪府大阪市北区梅田3-1-3", 
+                        nav: "LUCUA", 
+                        tags: ["購物"], 
+                        hours: "10:30-20:30",
                         guide: ["B1｜3COINS／餐飲+伴手禮", "1F｜convers tokyo", "6F｜Plaza／靴下屋", "8F｜LUSH／無印良品／3COINS plus", "9F｜Loft（文具雜貨天堂！）"],
                         about: { title: "樓層資訊", content: "B1、1F、2F、3F、5F、7F可與 LUCUA 1100 互通。" }
                     },
                     { 
-                        time: "19:10", type: "shop", title: "Links Umeda", address: "大阪府大阪市北区大深町1-1", nav: "LINKS UMEDA", tags: ["購物"], hours: "10:00-21:00",
+                        time: "19:10", 
+                        type: "shop", 
+                        title: "Links Umeda", 
+                        address: "大阪府大阪市北区大深町1-1", 
+                        nav: "LINKS UMEDA", 
+                        tags: ["購物"], 
+                        hours: "10:00-21:00",
                         guide: ["B1｜美味橫町", "1F｜Uniqlo", "3F｜GU"]
                     },
                     { 
-                        time: "20:00", type: "shop", title: "Yodobashi", address: "大阪府大阪市北区大深町1-1", nav: "Yodobashi Umeda", tags: ["購物"], hours: "09:30-22:00",
+                        time: "20:00", 
+                        type: "shop", 
+                        title: "Yodobashi", 
+                        address: "大阪府大阪市北区大深町1-1", 
+                        nav: "Yodobashi Umeda", 
+                        tags: ["購物"], 
+                        hours: "09:30-22:00",
                         guide: ["2F｜相機、吹風機", "4F｜電子鍋", "5F｜玩具"],
                         about: { title: "交通指引", content: "地鐵4號出口直結。" }
                     },
                     { 
-                        time: "21:00", type: "food", title: "串かつ専門店 松葉 総本店", address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", nav: "Matsuba Sohonten", tags: ["體驗"], hours: "10:30-21:30",
+                        time: "21:00", 
+                        type: "food", 
+                        title: "串かつ専門店 松葉 総本店", 
+                        address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", 
+                        nav: "Matsuba Sohonten", 
+                        tags: ["體驗"], 
+                        hours: "10:30-21:30",
                         guide: ["注意：醬汁禁止二次沾取 (二度漬け禁止)。", "特色：立食串炸老店，感受大阪大叔氛圍。"]
                     },
                     { 
-                        time: "21:15", type: "food", title: "Hanadako 章魚燒", address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", nav: "Hanadako Osaka", tags: ["必吃", "排隊"], hours: "10:00-22:00",
+                        time: "21:15", 
+                        type: "food", 
+                        title: "Hanadako 章魚燒", 
+                        address: "大阪府大阪市北区角田町9-26 新梅田食道街 1F", 
+                        nav: "Hanadako Osaka", 
+                        tags: ["必吃", "排隊"], 
+                        hours: "10:00-22:00",
                         guide: ["必點菜單：蔥花美乃滋章魚燒 (ネギマヨ)。", "特色：站著吃 (立食)，翻桌率快。"],
                         about: { title: "交通與特色", content: "地鐵2號出口。堅持使用未經冷凍的生章魚 (生タコ)。" }
                     },
                     { 
-                        time: "21:30", type: "food", title: "お好み焼 SAKURA", address: "大阪府大阪市北区角田町9-26 新梅田食道街", nav: "Okonomiyaki Sakura", tags: ["必吃"], hours: "11:00-22:00",
+                        time: "21:30", 
+                        type: "food", 
+                        title: "お好み焼 SAKURA", 
+                        address: "大阪府大阪市北区角田町9-26 新梅田食道街", 
+                        nav: "Okonomiyaki Sakura", 
+                        tags: ["必吃"], 
+                        hours: "11:00-22:00",
                         guide: ["推薦：混合燒 (Mix-yaki)。", "口感：口感蓬鬆，醬汁濃郁。"]
                     },
                     { 
-                        time: "22:00", type: "shop", title: "Book Studio", address: "大阪府大阪市北区梅田3-1-1 JR大阪駅構内", nav: "Book Studio Osaka", guide: ["購買旅遊書或文具。"], hours: "08:00-23:00",
+                        time: "22:00", 
+                        type: "shop", 
+                        title: "Book Studio", 
+                        address: "大阪府大阪市北区梅田3-1-1 JR大阪駅構内", 
+                        nav: "Book Studio Osaka", 
+                        guide: ["購買旅遊書或文具。"], 
+                        hours: "08:00-23:00",
                         about: { title: "交通指引", content: "地鐵3-A出口。" }
                     },
-                    { time: "22:30", type: "hotel", title: "ホテル京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", hours: "24H", guide: ["養精蓄銳。"] }
+                    { 
+                        time: "22:30", 
+                        type: "hotel", 
+                        title: "ホテル京阪淀屋橋", 
+                        address: "大阪府大阪市中央区北浜2-4-6", 
+                        nav: "Hotel Keihan Yodoyabashi", 
+                        hours: "24H", 
+                        guide: ["養精蓄銳。"] 
+                    }
                 ] 
             },
             "Day 2": { 
-                date: "1/12", weekday: "Mon", area: "難波心齋橋", lat: 34.6654, lon: 135.5009,
+                date: "1/12", 
+                weekday: "Mon", 
+                area: "難波心齋橋", 
+                lat: 34.6654, 
+                lon: 135.5009,
                 events: [ 
                     { 
-                        time: "08:20", type: "sight", title: "難波八阪神社", address: "大阪府大阪市浪速区元町2-9-19", nav: "Namba Yasaka Shrine", tags: ["必拍", "求財"], hours: "06:00-17:00",
+                        time: "08:20", 
+                        type: "sight", 
+                        title: "難波八阪神社", 
+                        address: "大阪府大阪市浪速区元町2-9-19", 
+                        nav: "Namba Yasaka Shrine", 
+                        tags: ["必拍", "求財"], 
+                        hours: "06:00-17:00",
                         guide: ["必拍重點：高12公尺的巨大獅子殿。", "御守推薦：『獅子頭御守』。"],
                         about: { title: "交通指引", content: "M御堂筋線「淀屋橋站17進站」至「難波3出口」。" }
                     },
                     { 
-                        time: "09:30", type: "food", title: "Galette au Beurre", address: "大阪府大阪市中央区難波5-1-5 大阪タカシマヤ B1F", nav: "Galette au Beurre Takashimaya Osaka", tags: ["伴手禮", "高島屋限定"], hours: "10:00-20:00",
+                        time: "09:30", 
+                        type: "food", 
+                        title: "Galette au Beurre", 
+                        address: "大阪府大阪市中央区難波5-1-5 大阪タカシマヤ B1F", 
+                        nav: "Galette au Beurre Takashimaya Osaka", 
+                        tags: ["伴手禮", "高島屋限定"], 
+                        hours: "10:00-20:00",
                         guide: ["必買伴手禮：經典原味厚奶油餅乾 (Galette Bretonne)。", "注意：鐵盒款非常搶手，建議開店即去。"],
                         about: { title: "品牌背景", content: "由知名甜點大廠 Morozoff 打造的高級奶油點心品牌，主打使用法國產 A.O.P. 發酵奶油。" }
                     },
                     { 
-                        time: "10:00", type: "food", title: "黑門市場", address: "大阪府大阪市中央区日本橋2-4-1", nav: "Kuromon Ichiba Market", tags: ["美食"], hours: "09:00-18:00",
+                        time: "10:00", 
+                        type: "food", 
+                        title: "黑門市場", 
+                        address: "大阪府大阪市中央区日本橋2-4-1", 
+                        nav: "Kuromon Ichiba Market", 
+                        tags: ["美食"], 
+                        hours: "09:00-18:00",
                         guide: ["推薦美食：現烤扇貝、海鮮串、豆漿。", "注意：部分老店僅收現金。"]
                     },
-                    { time: "11:15", type: "sight", title: "固力果跑跑人", address: "大阪府大阪市中央区道頓堀1-10-2", nav: "Glico Man Sign", hours: "24H", guide: ["攻略：最佳拍攝點在戎橋上。"] },
                     { 
-                        time: "11:30", type: "shop", title: "心齋橋筋商店街", address: "大阪府大阪市中央区心斎橋筋", nav: "Shinsaibashi-Suji", hours: "11:00-20:00",
+                        time: "11:15", 
+                        type: "sight", 
+                        title: "固力果跑跑人", 
+                        address: "大阪府大阪市中央区道頓堀1-10-2", 
+                        nav: "Glico Man Sign", 
+                        hours: "24H", 
+                        guide: ["攻略：最佳拍攝點在戎橋上。"] 
+                    },
+                    { 
+                        time: "11:30", 
+                        type: "shop", 
+                        title: "心齋橋筋商店街", 
+                        address: "大阪府大阪市中央区心斎橋筋", 
+                        nav: "Shinsaibashi-Suji", 
+                        hours: "11:00-20:00",
                         guide: ["重點：藥妝比價、Uniqlo 旗艦店。", "必去：GU／UNIQLO／ABC-MART"] 
                     },
                     { 
-                        time: "13:00", type: "food", title: "牛かつもと村", address: "大阪府大阪市中央区難波3-3-1", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["必吃", "排隊"], hours: "11:00-22:00",
+                        time: "13:00", 
+                        type: "food", 
+                        title: "牛かつもと村", 
+                        address: "大阪府大阪市中央区難波3-3-1", 
+                        nav: "Gyukatsu Motomura Namba Midosuji", 
+                        tags: ["必吃", "排隊"], 
+                        hours: "11:00-22:00",
                         guide: ["必點菜單：炸牛排定食 (130g)。", "吃法：石板上煎至喜歡熟度，沾芥末醬油。", "重要：建議提早 10 分鐘到店。"],
                         about: { title: "美味秘密", content: "只炸 60 秒的半熟牛肉，外酥內嫩，是日本炸牛排風潮的代表名店。" },
                         booking: { id: "2PAKJX", name: "CHEN HSUAN YU", time: "13:00" }
                     },
-                    { time: "14:00", type: "food", title: "章魚燒道樂 Wanaka", address: "大阪府大阪市中央区道頓堀1-6-12", nav: "Takoyaki Wanaka Dotonbori", hours: "11:00-22:00", guide: ["道頓堀排隊點心。"] },
-                    { time: "14:15", type: "sight", title: "御津八幡宮", address: "大阪府大阪市中央区西心斎橋2-10-7", nav: "Mitsu Hachimangu", hours: "09:00-17:00", guide: ["特色：美國村內的寧靜角落，有可愛的寵物御守。"] },
                     { 
-                        time: "14:45", type: "shop", title: "大丸心齋橋 / PARCO", address: "大阪府大阪市中央区心斎橋筋1-7-1", nav: "Daimaru Shinsaibashi", tags: ["必逛"], hours: "10:00-20:00",
+                        time: "14:00", 
+                        type: "food", 
+                        title: "章魚燒道樂 Wanaka", 
+                        address: "大阪府大阪市中央区道頓堀1-6-12", 
+                        nav: "Takoyaki Wanaka Dotonbori", 
+                        hours: "11:00-22:00", 
+                        guide: ["道頓堀排隊點心。"] 
+                    },
+                    { 
+                        time: "14:15", 
+                        type: "sight", 
+                        title: "御津八幡宮", 
+                        address: "大阪府大阪市中央区西心斎橋2-10-7", 
+                        nav: "Mitsu Hachimangu", 
+                        hours: "09:00-17:00", 
+                        guide: ["特色：美國村內的寧靜角落，有可愛的寵物御守。"] 
+                    },
+                    { 
+                        time: "14:45", 
+                        type: "shop", 
+                        title: "大丸心齋橋 / PARCO", 
+                        address: "大阪府大阪市中央区心斎橋筋1-7-1", 
+                        nav: "Daimaru Shinsaibashi", 
+                        tags: ["必逛"], 
+                        hours: "10:00-20:00",
                         guide: ["6F 動漫層：吉卜力、寶可夢中心、JUMP SHOP。", "PARCO：POP MART 在隔壁 PARCO。"]
                     },
                     { 
-                        time: "16:30", type: "shop", title: "Kinji used clothing", address: "大阪府大阪市中央区西心斎橋1-6-14 ビッグステップ 2F", nav: "Kinji Big Step", tags: ["古著"], hours: "11:00-20:00",
+                        time: "16:30", 
+                        type: "shop", 
+                        title: "Kinji used clothing", 
+                        address: "大阪府大阪市中央区西心斎橋1-6-14 ビッグステップ 2F", 
+                        nav: "Kinji Big Step", 
+                        tags: ["古著"], 
+                        hours: "11:00-20:00",
                         guide: ["特色：大型連鎖古著店，品項豐富，價格親民。", "位置：位於 Big Step 2樓。"]
                     },
                     { 
-                        time: "16:55", type: "shop", title: "kindal カインドオル 心斎橋アメリカ村店", address: "大阪府大阪市中央区西心斎橋2-11-13", nav: "Kindal Shinsaibashi Americamura", tags: ["古著"], hours: "11:00-20:00",
+                        time: "16:55", 
+                        type: "shop", 
+                        title: "kindal カインドオル 心斎橋アメリカ村店", 
+                        address: "大阪府大阪市中央区西心斎橋2-11-13", 
+                        nav: "Kindal Shinsaibashi Americamura", 
+                        tags: ["古著"], 
+                        hours: "11:00-20:00",
                         guide: ["特色：主打品牌古著，選品較為精緻。", "推薦：尋找設計師品牌的好地方。"]
                     },
                     { 
-                        time: "17:20", type: "food", title: "元祖どないや 心斎橋アメリカ村店", address: "大阪府大阪市中央区西心斎橋1-16-15", nav: "Ganso Donaiya Americamura", tags: ["小吃"], hours: "11:00-23:00",
+                        time: "17:20", 
+                        type: "food", 
+                        title: "元祖どないや 心斎橋アメリカ村店", 
+                        address: "大阪府大阪市中央区西心斎橋1-16-15", 
+                        nav: "Ganso Donaiya Americamura", 
+                        tags: ["小吃"], 
+                        hours: "11:00-23:00",
                         guide: ["推薦：大顆章魚燒，口感軟嫩。", "注意：小心燙口。"]
                     },
                     { 
-                        time: "17:35", type: "shop", title: "kindal カインドオル 四ツ橋北堀江店", address: "大阪府大阪市西区北堀江1-3-10", nav: "Kindal Yotsubashi Kitahorie", tags: ["古著"], hours: "11:00-20:00",
+                        time: "17:35", 
+                        type: "shop", 
+                        title: "kindal カインドオル 四ツ橋北堀江店", 
+                        address: "大阪府大阪市西区北堀江1-3-10", 
+                        nav: "Kindal Yotsubashi Kitahorie", 
+                        tags: ["古著"], 
+                        hours: "11:00-20:00",
                         guide: ["區域：位於堀江區，氛圍較悠閒。", "特色：服飾狀況通常保持良好。"]
                     },
                     { 
-                        time: "18:00", type: "shop", title: "相機的大林", address: "大阪府大阪市北区梅田1-11-4 大阪駅前第4ビル 1F", nav: "Camera no Ohbayashi", hours: "10:00-18:00",
+                        time: "18:00", 
+                        type: "shop", 
+                        title: "相機的大林", 
+                        address: "大阪府大阪市北区梅田1-11-4 大阪駅前第4ビル 1F", 
+                        nav: "Camera no Ohbayashi", 
+                        hours: "10:00-18:00",
                         guide: ["攝影迷必逛，中古鏡頭豐富。"],
                         about: { title: "交通指引", content: "Y四橋線「四橋站」至「西梅田站」下車。" }
                     },
                     { 
-                        time: "18:40", type: "shop", title: "阪急三番街", address: "大阪府大阪市北区芝田1-1-3", nav: "Hankyu Sanbangai", tags: ["購物"], hours: "10:00-21:00",
+                        time: "18:40", 
+                        type: "shop", 
+                        title: "阪急三番街", 
+                        address: "大阪府大阪市北区芝田1-1-3", 
+                        nav: "Hankyu Sanbangai", 
+                        tags: ["購物"], 
+                        hours: "10:00-21:00",
                         guide: ["推薦：Kiddy Land (玩具)、古著屋JAM (茶屋町店)。"],
                         about: { title: "交通指引", content: "直走右轉往大阪梅田➡️左轉梅田➡️北口改札口往右。" }
                     },
-                    { time: "20:10", type: "shop", title: "HEP FIVE", address: "大阪府大阪市北区角田町5-15", nav: "HEP FIVE", hours: "11:00-21:00", guide: ["地標：紅色摩天輪地標，年輕服飾品牌多。"] },
                     { 
-                        time: "21:15", type: "food", title: "焼肉力丸 梅田東通り店", address: "大阪府大阪市北区小松原町4-32 北大阪東通りビル 3F", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦", "吃到飽"], hours: "16:00-23:00",
+                        time: "20:10", 
+                        type: "shop", 
+                        title: "HEP FIVE", 
+                        address: "大阪府大阪市北区角田町5-15", 
+                        nav: "HEP FIVE", 
+                        hours: "11:00-21:00", 
+                        guide: ["地標：紅色摩天輪地標，年輕服飾品牌多。"] 
+                    },
+                    { 
+                        time: "21:15", 
+                        type: "food", 
+                        title: "焼肉力丸 梅田東通り店", 
+                        address: "大阪府大阪市北区小松原町4-32 北大阪東通りビル 3F", 
+                        nav: "Yakiniku Rikimaru Umeda Higashi", 
+                        tags: ["推薦", "吃到飽"], 
+                        hours: "16:00-23:00",
                         guide: ["必點：厚切牛舌、橫膈膜。", "特色：CP值極高的國產牛吃到飽。"],
                         booking: { name: "CHEN HSUAN YU", time: "21:15" }
                     },
-                    { time: "23:00", type: "hotel", title: "ホテル京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", hours: "24H", guide: ["養精蓄銳。"] }
+                    { 
+                        time: "23:00", 
+                        type: "hotel", 
+                        title: "ホテル京阪淀屋橋", 
+                        address: "大阪府大阪市中央区北浜2-4-6", 
+                        nav: "Hotel Keihan Yodoyabashi", 
+                        hours: "24H", 
+                        guide: ["養精蓄銳。"] 
+                    }
                 ] 
             },
             "Day 3": { 
-                date: "1/13", weekday: "Tue", area: "大阪 -> 京都", lat: 35.0116, lon: 135.7681,
+                date: "1/13", 
+                weekday: "Tue", 
+                area: "大阪 -> 京都", 
+                lat: 35.0116, 
+                lon: 135.7681,
                 events: [ 
-                    { time: "09:00", type: "sight", title: "大阪城", address: "大阪府大阪市中央区大阪城1-1", nav: "Osaka Castle", hours: "09:00-17:00", guide: ["晨間散步，天守閣拍照。"] },
                     { 
-                        time: "10:00", type: "hotel", title: "ホテルビスタプレミオ京都 和邸", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"], hours: "24H",
+                        time: "09:00", 
+                        type: "sight", 
+                        title: "大阪城", 
+                        address: "大阪府大阪市中央区大阪城1-1", 
+                        nav: "Osaka Castle", 
+                        hours: "09:00-17:00", 
+                        guide: ["晨間散步，天守閣拍照。"] 
+                    },
+                    { 
+                        time: "10:00", 
+                        type: "hotel", 
+                        title: "ホテルビスタプレミオ京都 和邸", 
+                        address: "京都市中京区六角通新町西入西六角町457", 
+                        nav: "Hotel Vista Premio Kyoto Nagomitei", 
+                        tags: ["住宿"], 
+                        hours: "24H",
                         guide: ["移動：移動至京都，先寄放行李。", "位置：飯店位於市中心，逛街超方便。"],
                         about: { title: "交通指引", content: "步行6分鐘至K堺筋線「北濱站」往北千里至阪急線「淡路站」下車，轉HK阪急京都特急線往京都河原町至「HK85烏丸」站下車後步行9分鐘。" }
                     },
                     { 
-                        time: "11:15", type: "food", title: "三嶋亭 (高島屋店)", address: "京都市下京区四条通河原町西入真町52 7F", nav: "Mishima-tei Takashimaya Kyoto", tags: ["必吃", "百年老店"], hours: "11:00-20:00",
+                        time: "11:15", 
+                        type: "food", 
+                        title: "三嶋亭 (高島屋店)", 
+                        address: "京都市下京区四条通河原町西入真町52 7F", 
+                        nav: "Mishima-tei Takashimaya Kyoto", 
+                        tags: ["必吃", "百年老店"], 
+                        hours: "11:00-20:00",
                         guide: ["攻略：這裡的午間套餐是本店半價，CP 值極高。", "吃法：關西式壽喜燒 (先煎後煮)。"],
                         about: { title: "百年歷史", content: "創業於明治 6 年 (1873年)，是京都最古老的壽喜燒專門店。堅持使用熟成黑毛和牛與獨家秘傳醬汁。" }
                     },
                     { 
-                        time: "12:45", type: "sight", title: "常寂光寺", address: "京都市右京区嵯峨小倉山小倉町3", nav: "Jojakkoji Temple", tags: ["必拍"], hours: "09:00-17:00",
+                        time: "12:45", 
+                        type: "sight", 
+                        title: "常寂光寺", 
+                        address: "京都市右京区嵯峨小倉山小倉町3", 
+                        nav: "Jojakkoji Temple", 
+                        tags: ["必拍"], 
+                        hours: "09:00-17:00",
                         guide: ["特色：依山而建，紅葉名所，視野極佳。", "氛圍：幽靜古樸，適合散步。"],
                         about: { title: "交通指引", content: "阪急京都線「京都河原町」往大阪梅田方向至「西院站」轉乘嵐電「西院站」至嵐電「嵐山站」下車。" }
                     },
-                    { time: "13:15", type: "sight", title: "竹林小徑", address: "京都市右京区嵯峨小倉山たぶち山町", nav: "Arashiyama Bamboo Grove", tags: ["必拍"], hours: "24H", guide: ["必拍：高聳入雲的竹林隧道。", "注意：人潮眾多，注意拍照禮儀。"] },
-                    { time: "13:45", type: "sight", title: "野宮神社", address: "京都市右京区嵯峨野宮町1", nav: "Nonomiya Shrine", tags: ["結緣"], hours: "09:00-17:00", guide: ["祈求：良緣與學業進步。", "特色：保留著黒木鳥居，源氏物語中也有記載。"] },
-                    { time: "14:15", type: "sight", title: "天龍寺", address: "京都市右京区嵯峨天龍寺芒ノ馬場町68", nav: "Tenryu-ji", tags: ["世界遺產"], hours: "08:30-17:00", guide: ["必看：曹源池庭園，借景嵐山，四季皆美。", "地位：京都五山之首。"] },
-                    { time: "14:45", type: "shop", title: "嵐山大街", address: "京都市右京区嵯峨天龍寺造路町", nav: "Arashiyama Main Street", tags: ["逛街"], hours: "10:00-17:00", guide: ["必吃：湯葉起司可樂餅、抹茶冰淇淋。", "伴手禮：各式京都漬物、和風雜貨。"] },
-                    { time: "15:45", type: "sight", title: "渡月橋", address: "京都市右京区嵯峨中ノ島町", nav: "Togetsukyo Bridge", tags: ["地標"], hours: "24H", guide: ["拍照：站在橋側拍全景，背景是嵐山。", "傳說：過橋時不要回頭，否則好運會溜走。"] },
-                    { time: "16:30", type: "sight", title: "桂川沿岸", address: "京都市西京区嵐山", nav: "Katsura River Arashiyama", tags: ["散步"], hours: "24H", guide: ["活動：推薦買杯咖啡在河岸邊休息。", "推薦：% ARABICA 京都嵐山店就在附近。"] },
                     { 
-                        time: "17:00", type: "shop", title: "寶可夢中心京都店", address: "京都市下京区四条通室町東入函谷鉾町78 SUINA室町 2F", nav: "Pokemon Center Kyoto", tags: ["購物"], hours: "10:00-20:00",
+                        time: "13:15", 
+                        type: "sight", 
+                        title: "竹林小徑", 
+                        address: "京都市右京区嵯峨小倉山たぶち山町", 
+                        nav: "Arashiyama Bamboo Grove", 
+                        tags: ["必拍"], 
+                        hours: "24H", 
+                        guide: ["必拍：高聳入雲的竹林隧道。", "注意：人潮眾多，注意拍照禮儀。"] 
+                    },
+                    { 
+                        time: "13:45", 
+                        type: "sight", 
+                        title: "野宮神社", 
+                        address: "京都市右京区嵯峨野宮町1", 
+                        nav: "Nonomiya Shrine", 
+                        tags: ["結緣"], 
+                        hours: "09:00-17:00", 
+                        guide: ["祈求：良緣與學業進步。", "特色：保留著黒木鳥居，源氏物語中也有記載。"] 
+                    },
+                    { 
+                        time: "14:15", 
+                        type: "sight", 
+                        title: "天龍寺", 
+                        address: "京都市右京区嵯峨天龍寺芒ノ馬場町68", 
+                        nav: "Tenryu-ji", 
+                        tags: ["世界遺產"], 
+                        hours: "08:30-17:00", 
+                        guide: ["必看：曹源池庭園，借景嵐山，四季皆美。", "地位：京都五山之首。"] 
+                    },
+                    { 
+                        time: "14:45", 
+                        type: "shop", 
+                        title: "嵐山大街", 
+                        address: "京都市右京区嵯峨天龍寺造路町", 
+                        nav: "Arashiyama Main Street", 
+                        tags: ["逛街"], 
+                        hours: "10:00-17:00", 
+                        guide: ["必吃：湯葉起司可樂餅、抹茶冰淇淋。", "伴手禮：各式京都漬物、和風雜貨。"] 
+                    },
+                    { 
+                        time: "15:45", 
+                        type: "sight", 
+                        title: "渡月橋", 
+                        address: "京都市右京区嵯峨中ノ島町", 
+                        nav: "Togetsukyo Bridge", 
+                        tags: ["地標"], 
+                        hours: "24H", 
+                        guide: ["拍照：站在橋側拍全景，背景是嵐山。", "傳說：過橋時不要回頭，否則好運會溜走。"] 
+                    },
+                    { 
+                        time: "16:30", 
+                        type: "sight", 
+                        title: "桂川沿岸", 
+                        address: "京都市西京区嵐山", 
+                        nav: "Katsura River Arashiyama", 
+                        tags: ["散步"], 
+                        hours: "24H", 
+                        guide: ["活動：推薦買杯咖啡在河岸邊休息。", "推薦：% ARABICA 京都嵐山店就在附近。"] 
+                    },
+                    { 
+                        time: "17:00", 
+                        type: "shop", 
+                        title: "寶可夢中心京都店", 
+                        address: "京都市下京区四条通室町東入函谷鉾町78 SUINA室町 2F", 
+                        nav: "Pokemon Center Kyoto", 
+                        tags: ["購物"], 
+                        hours: "10:00-20:00",
                         guide: ["特色：穿著和服的皮卡丘是京都限定。", "位置：SUINA室町 2樓。"],
                         about: { title: "交通指引", content: "阪急嵐山線「嵐山站」往桂方向至「桂站」轉乘阪急京都線往京都河原町方向「烏丸站」下車。" }
                     },
-                    { time: "17:30", type: "sight", title: "住む街でアートを楽しむ", address: "京都市中京区", nav: "BnA Alter Museum", hours: "12:00-19:00", guide: ["內容：欣賞京都街頭的藝術氛圍與建築。"] },
                     { 
-                        time: "18:00", type: "shop", title: "藤井大丸百貨", address: "京都市下京区寺町通四条下ル貞安前之町605", nav: "Fujii Daimaru", tags: ["購物"], hours: "10:30-20:00", 
+                        time: "17:30", 
+                        type: "sight", 
+                        title: "住む街でアートを楽しむ", 
+                        address: "京都市中京区", 
+                        nav: "https://maps.app.goo.gl/JUZ1uT46dw47QHi68?g_st=ic", 
+                        hours: "12:00-19:00", 
+                        guide: ["內容：欣賞京都街頭的藝術氛圍與建築。"] 
+                    },
+                    { 
+                        time: "18:00", 
+                        type: "shop", 
+                        title: "藤井大丸百貨", 
+                        address: "京都市下京区寺町通四条下ル貞安前之町605", 
+                        nav: "Fujii Daimaru", 
+                        tags: ["購物"], 
+                        hours: "10:30-20:00", 
                         guide: ["特色：年輕時尚潮流品牌聚集。", "推薦：BEAMS、UNITED ARROWS 等選貨店。", "必去：Marimekko 京都／MAISEMA"] 
                     },
-                    { time: "18:30", type: "shop", title: "SOU・SOU", address: "京都市中京区新京極通四条上ル中之町583-3", nav: "SOU・SOU Kyoto", tags: ["必逛"], hours: "11:00-20:00", guide: ["必買：數字圖案的足袋、和風小物。", "分店：附近有多家不同主題的分店 (布料、童裝等)。"] },
                     { 
-                        time: "19:00", type: "shop", title: "京都高島屋百貨", address: "京都市下京区四条通河原町西入真町52", nav: "Kyoto Takashimaya", tags: ["購物"], hours: "10:00-20:00", 
+                        time: "18:30", 
+                        type: "shop", 
+                        title: "SOU・SOU", 
+                        address: "京都市中京区新京極通四条上ル中之町583-3", 
+                        nav: "SOU・SOU Kyoto", 
+                        tags: ["必逛"], 
+                        hours: "11:00-20:00", 
+                        guide: ["必買：數字圖案的足袋、和風小物。", "分店：附近有多家不同主題的分店 (布料、童裝等)。"] 
+                    },
+                    { 
+                        time: "19:00", 
+                        type: "shop", 
+                        title: "京都高島屋百貨", 
+                        address: "京都市下京区四条通河原町西入真町52", 
+                        nav: "Kyoto Takashimaya", 
+                        tags: ["購物"], 
+                        hours: "10:00-20:00", 
                         guide: ["美食：B1 地下街美食豐富。", "品牌：國際精品與化妝品齊全。", "必去：THE NORTH FACE／New Balance 京都髙島屋S.C.店"] 
                     },
-                    { time: "19:30", type: "sight", title: "錦天滿宮", address: "京都市中京区新京極通り四条上る中之町537", nav: "Nishiki Tenmangu", tags: ["祈福"], hours: "08:00-20:00", guide: ["特色：位於錦市場盡頭，鳥居嵌入建築物中。", "祈求：學問之神，求智慧。"] },
-                    { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", hours: "11:00-21:00", guide: ["動漫迷聖地。"] },
                     { 
-                        time: "21:00", type: "food", title: "麵屋優光", address: "京都市中京区場之町588", nav: "Menya Yukou", tags: ["必吃", "排隊"], hours: "11:00-15:00 / 17:30-22:00",
+                        time: "19:30", 
+                        type: "sight", 
+                        title: "錦天滿宮", 
+                        address: "京都市中京区新京極通り四条上る中之町537", 
+                        nav: "Nishiki Tenmangu", 
+                        tags: ["祈福"], 
+                        hours: "08:00-20:00", 
+                        guide: ["特色：位於錦市場盡頭，鳥居嵌入建築物中。", "祈求：學問之神，求智慧。"] 
+                    },
+                    { 
+                        time: "20:00", 
+                        type: "shop", 
+                        title: "Animate Kyoto", 
+                        address: "京都市中京区新京極蛸薬師下ル東側町525-1", 
+                        nav: "Animate Kyoto", 
+                        hours: "11:00-21:00", 
+                        guide: ["動漫迷聖地。"] 
+                    },
+                    { 
+                        time: "21:00", 
+                        type: "food", 
+                        title: "麵屋優光", 
+                        address: "京都市中京区場之町588", 
+                        nav: "Menya Yukou", 
+                        tags: ["必吃", "排隊"], 
+                        hours: "11:00-15:00 / 17:30-22:00",
                         guide: ["★ 必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"],
                         about: { title: "職人精神", content: "店主曾在名店修業，堅持使用多種貝類熬製高湯，創造出充滿鮮味 (Umami) 卻清爽不油膩的新派京都拉麵。" }
                     },
-                    { time: "22:00", type: "hotel", title: "ホテルビスタプレミオ京都 和邸", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", hours: "24H", guide: ["整理戰利品。"] }
+                    { 
+                        time: "22:00", 
+                        type: "hotel", 
+                        title: "ホテルビスタプレミオ京都 和邸", 
+                        address: "京都市中京区六角通新町西入西六角町457", 
+                        nav: "Hotel Vista Premio Kyoto Nagomitei", 
+                        hours: "24H", 
+                        guide: ["整理戰利品。"] 
+                    }
                 ] 
             },
             "Day 4": { 
-                date: "1/14", weekday: "Wed", area: "京都深度遊", lat: 35.0116, lon: 135.7681,
+                date: "1/14", 
+                weekday: "Wed", 
+                area: "京都深度遊", 
+                lat: 35.0116, 
+                lon: 135.7681,
                 events: [ 
-                    { time: "07:30", type: "sight", title: "清水寺", address: "京都市東山区清水1-294", nav: "Kiyomizu-dera", tags: ["必去", "世界遺產"], hours: "06:00-18:00", guide: ["攻略：早上 8 點前人潮最少。", "必做：到『音羽之瀧』接水喝 (學業/戀愛/長壽)。"], about: { title: "清水舞台", content: "正殿依懸崖而建，由 139 根巨大櫸木支撐，結構中沒使用任何釘子，是日本傳統木造建築巔峰。" } },
-                    { time: "09:30", type: "shop", title: "清水坂 / 產寧坂", address: "京都市東山区清水2-256", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"], hours: "09:00-18:00", guide: ["必買：京都北山MALEBRANCHE (茶之菓)。", "必逛：七味家本舗、伊藤軒／SOU・SOU清水店。", "特色：七味唐辛子 OCHANOKOSAISAI、京都 JIZO堂。", "推薦：Nittodo Kyoto Cafe、京都烏丸六七堂 (八坂通店)。"] },
-                    { time: "11:30", type: "sight", title: "八阪庚申堂", address: "京都市東山区金園町390", nav: "Yasaka Koshin-do", hours: "09:00-17:00", guide: ["色彩繽紛的束猿 (結緣猴)，IG 打卡熱點。"] },
                     { 
-                        time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山区祇園町南側", nav: "Gion Unagi Kawatō", hours: "11:00-14:30 / 17:00-21:30", 
+                        time: "07:30", 
+                        type: "sight", 
+                        title: "清水寺", 
+                        address: "京都市東山区清水1-294", 
+                        nav: "Kiyomizu-dera", 
+                        tags: ["必去", "世界遺產"], 
+                        hours: "06:00-18:00", 
+                        guide: ["攻略：早上 8 點前人潮最少。", "必做：到『音羽之瀧』接水喝 (學業/戀愛/長壽)。"], 
+                        about: { title: "清水舞台", content: "正殿依懸崖而建，由 139 根巨大櫸木支撐，結構中沒使用任何釘子，是日本傳統木造建築巔峰。" } 
+                    },
+                    { 
+                        time: "09:30", 
+                        type: "shop", 
+                        title: "清水坂 / 產寧坂", 
+                        address: "京都市東山区清水2-256", 
+                        nav: "Malebranche Kiyomizuzaka", 
+                        tags: ["伴手禮"], 
+                        hours: "09:00-18:00", 
+                        guide: ["必買：京都北山MALEBRANCHE (茶之菓)。", "必逛：七味家本舗、伊藤軒／SOU・SOU清水店。", "特色：七味唐辛子 OCHANOKOSAISAI、京都 JIZO堂。", "推薦：Nittodo Kyoto Cafe、京都烏丸六七堂 (八坂通店)。"] 
+                    },
+                    { 
+                        time: "11:30", 
+                        type: "sight", 
+                        title: "八阪庚申堂", 
+                        address: "京都市東山区金園町390", 
+                        nav: "Yasaka Koshin-do", 
+                        hours: "09:00-17:00", 
+                        guide: ["色彩繽紛的束猿 (結緣猴)，IG 打卡熱點。"] 
+                    },
+                    { 
+                        time: "12:30", 
+                        type: "food", 
+                        title: "祇園 鰻 川藤", 
+                        address: "京都市東山区祇園町南側", 
+                        nav: "Gion Unagi Kawatō", 
+                        hours: "11:00-14:30 / 17:00-21:30", 
                         guide: ["午餐推薦：鰻魚飯三吃。"],
                         booking: { id: "UHLMCL", name: "CHEN HSUAN YU", time: "12:30" }
                     },
-                    { time: "13:30", type: "shop", title: "Miffy's Oyatsu-do by Miffy's Kitchen Gion", address: "京都市東山区祇園町南側", nav: "Miffy's Oyatsu-do Gion", tags: ["可愛"], hours: "11:00-19:00", guide: ["みっふぃーおやつ堂：米飛兔造型點心、雜貨。"] },
-                    { time: "13:45", type: "shop", title: "最強一味", address: "京都市東山区", nav: "Gion Mibi", hours: "10:00-19:00", guide: ["特色：京都超辣辣椒粉，適合喜歡吃辣的人。"] },
-                    { time: "14:00", type: "sight", title: "祇園白川／祇園商店街", address: "京都市東山区", nav: "Gion Shirakawa", tags: ["散步"], hours: "24H", guide: ["必拍：巽橋、柳樹與町家建築。", "氛圍：最具京都風情的街道。"] },
                     { 
-                        time: "14:30", type: "sight", title: "下鴨神社", address: "京都市左京区下鴨泉川町59", nav: "Shimogamo Shrine", guide: ["糺之森散步。", "河合神社：祈求美麗的鏡繪馬。"], hours: "06:30-17:00",
+                        time: "13:30", 
+                        type: "shop", 
+                        title: "Miffy's Oyatsu-do by Miffy's Kitchen Gion", 
+                        address: "京都市東山区祇園町南側", 
+                        nav: "Miffy's Oyatsu-do Gion", 
+                        tags: ["可愛"], 
+                        hours: "11:00-19:00", 
+                        guide: ["みっふぃーおやつ堂：米飛兔造型點心、雜貨。"] 
+                    },
+                    { 
+                        time: "13:45", 
+                        type: "shop", 
+                        title: "最強一味", 
+                        address: "京都市東山区", 
+                        nav: "https://maps.app.goo.gl/BMtGe829hrMibFTe6?g_st=ic", 
+                        hours: "10:00-19:00", 
+                        guide: ["特色：京都超辣辣椒粉，適合喜歡吃辣的人。"] 
+                    },
+                    { 
+                        time: "14:00", 
+                        type: "sight", 
+                        title: "祇園白川／祇園商店街", 
+                        address: "京都市東山区", 
+                        nav: "Gion Shirakawa", 
+                        tags: ["散步"], 
+                        hours: "24H", 
+                        guide: ["必拍：巽橋、柳樹與町家建築。", "氛圍：最具京都風情的街道。"] 
+                    },
+                    { 
+                        time: "14:30", 
+                        type: "sight", 
+                        title: "下鴨神社", 
+                        address: "京都市左京区下鴨泉川町59", 
+                        nav: "Shimogamo Shrine", 
+                        guide: ["糺之森散步。", "河合神社：祈求美麗的鏡繪馬。"], 
+                        hours: "06:30-17:00",
                         about: { title: "交通指引", content: "步行8分鐘至KH京阪本線「三條站」往出町柳方向至「出町柳站」下車。" }
                     },
-                    { time: "16:30", type: "shop", title: "河原町雜貨巡禮", address: "京都市中京区河原町三条上ル西側", nav: "Angers Kawaramachi", tags: ["必逛"], hours: "11:00-20:00", guide: ["必喝：HUMAN MADE 1928 咖啡 by 藍瓶咖啡。", "必逛雜貨：ANGERS 河原町本店、MoMA Design Store 京都、TODAY'S SPECIAL、Madu。", "特色店鋪：ペアキーホルダー専門店 2/8b (鑰匙圈)、mumokuteki goods & wears。", "商圈：新京極商店街、錦市場、唐吉訶德。"] },
-                    { time: "20:00", type: "food", title: "六角ace", address: "京都市中京区大阪材木町696-4", nav: "Rokkaku Ace", tags: ["推薦", "需預約"], hours: "17:00-23:00", guide: ["人氣創意居酒屋，氣氛熱鬧。", "必點：水果沙瓦、特色關東煮。"] },
-                    { time: "21:30", type: "hotel", title: "ホテルビスタプレミオ京都 和邸", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", hours: "24H", guide: ["最後一晚整理行李。"] }
+                    { 
+                        time: "16:30", 
+                        type: "shop", 
+                        title: "河原町雜貨巡禮", 
+                        address: "京都市中京区河原町三条上ル西側", 
+                        nav: "Angers Kawaramachi", 
+                        tags: ["必逛"], 
+                        hours: "11:00-20:00", 
+                        guide: ["必喝：HUMAN MADE 1928 咖啡 by 藍瓶咖啡。", "必逛雜貨：ANGERS 河原町本店、MoMA Design Store 京都、TODAY'S SPECIAL、Madu。", "特色店鋪：ペアキーホルダー専門店 2/8b (鑰匙圈)、mumokuteki goods & wears。", "商圈：新京極商店街、錦市場、唐吉訶德。"] 
+                    },
+                    { 
+                        time: "20:00", 
+                        type: "food", 
+                        title: "六角ace", 
+                        address: "京都市中京区大阪材木町696-4", 
+                        nav: "Rokkaku Ace", 
+                        tags: ["推薦", "需預約"], 
+                        hours: "17:00-23:00", 
+                        guide: ["人氣創意居酒屋，氣氛熱鬧。", "必點：水果沙瓦、特色關東煮。"] 
+                    },
+                    { 
+                        time: "21:30", 
+                        type: "hotel", 
+                        title: "ホテルビスタプレミオ京都 和邸", 
+                        address: "京都市中京区六角通新町西入西六角町457", 
+                        nav: "Hotel Vista Premio Kyoto Nagomitei", 
+                        hours: "24H", 
+                        guide: ["最後一晚整理行李。"] 
+                    }
                 ] 
             },
             "Day 5": { 
-                date: "1/15", weekday: "Thu", area: "返程", lat: 34.9671, lon: 135.7727,
+                date: "1/15", 
+                weekday: "Thu", 
+                area: "返程", 
+                lat: 34.9671, 
+                lon: 135.7727,
                 events: [ 
-                    { time: "07:00", type: "sight", title: "伏見稻荷大社", address: "京都市伏見区深草藪之内町68", nav: "Fushimi Inari Taisha", tags: ["必拍"], hours: "24H", guide: ["★ 攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"], about: { title: "千本鳥居", content: "全日本三萬座稻荷神社總本宮。紅色鳥居是信徒供奉，象徵對神明保佑五穀豐收、生意興隆的感謝。" } },
-                    { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京区押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], hours: "10:00-16:00", guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
                     { 
-                        time: "11:00", type: "food", title: "一蘭 京都烏丸店", address: "京都市下京区立売中之町102-3", nav: "Ichiran Kyoto Karasuma", tags: ["午餐"], hours: "10:00-22:00",
+                        time: "07:00", 
+                        type: "sight", 
+                        title: "伏見稻荷大社", 
+                        address: "京都市伏見区深草藪之内町68", 
+                        nav: "Fushimi Inari Taisha", 
+                        tags: ["必拍"], 
+                        hours: "24H", 
+                        guide: ["★ 攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"], 
+                        about: { title: "千本鳥居", content: "全日本三萬座稻荷神社總本宮。紅色鳥居是信徒供奉，象徵對神明保佑五穀豐收、生意興隆的感謝。" } 
+                    },
+                    { 
+                        time: "10:00", 
+                        type: "sight", 
+                        title: "御金神社", 
+                        address: "京都市中京区押西洞院町614", 
+                        nav: "Mikane Shrine", 
+                        tags: ["求財"], 
+                        hours: "10:00-16:00", 
+                        guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] 
+                    },
+                    { 
+                        time: "11:00", 
+                        type: "food", 
+                        title: "一蘭 京都烏丸店", 
+                        address: "京都市下京区立売中之町102-3", 
+                        nav: "Ichiran Kyoto Karasuma", 
+                        tags: ["午餐"], 
+                        hours: "10:00-22:00",
                         guide: ["口味：完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"] 
                     },
-                    { time: "12:00", type: "transport", title: "利木津巴士", address: "京都車站八條口", nav: "Kyoto Station Hachijoguchi Bus Stop", guide: ["前往關西機場 (KIX)。", "車程約 85 分鐘，不用搬行李轉車。"] },
-                    { time: "16:15", type: "transport", title: "關西機場", address: "KIX T1", nav: "Kansai International Airport", guide: ["Goodbye Japan!", "記得入關前買免稅品。"] }
+                    { 
+                        time: "12:00", 
+                        type: "transport", 
+                        title: "利木津巴士", 
+                        address: "京都車站八條口", 
+                        nav: "Kyoto Station Hachijoguchi Bus Stop", 
+                        guide: ["前往關西機場 (KIX)。", "車程約 85 分鐘，不用搬行李轉車。"] 
+                    },
+                    { 
+                        time: "16:15", 
+                        type: "transport", 
+                        title: "關西機場", 
+                        address: "KIX T1", 
+                        nav: "Kansai International Airport", 
+                        guide: ["Goodbye Japan!", "記得入關前買免稅品。"] 
+                    }
                 ] 
             }
         };
@@ -501,7 +1051,11 @@
             }, [selectedDay]);
 
             const handleNav = (loc) => {
-                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}&travelmode=driving`, '_blank');
+                if (loc.startsWith('http')) {
+                    window.open(loc, '_blank');
+                } else {
+                    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}`, '_blank');
+                }
             };
 
             const toggleDirection = () => setDirection(!direction);
