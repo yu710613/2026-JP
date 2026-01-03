@@ -85,7 +85,7 @@
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* 莫蘭迪高亮樣式 */
+        /* 莫蘭迪高亮樣式 (保留定義但此版本GuideItem已移除引用) */
         .hl-rose { color: #9d5b6e; font-weight: 700; background-color: #f4e9ec; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-blue { color: #5f7285; font-weight: 700; background-color: #e6eef5; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
         .hl-yellow { color: #9c8456; font-weight: 700; background-color: #f7f2e6; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
@@ -408,16 +408,12 @@
                 const label = cleanText.substring(0, splitIndex);
                 const content = cleanText.substring(splitIndex + 1);
                 
-                let colorClass = "text-stone-600 font-bold";
-                if (label.includes("必") || label.includes("推")) colorClass = "hl-rose";
-                if (label.includes("攻略") || label.includes("注意") || label.includes("重點") || label.includes("移動")) colorClass = "hl-blue";
-                if (label.includes("預約") || label.includes("口味") || label.includes("特色")) colorClass = "hl-yellow";
-
+                // Modified: No colored backgrounds, just bold text
                 return (
                     <li className="flex items-start text-sm text-stone-500 leading-relaxed mb-3">
                         <span className="text-stone-300 mr-2 mt-1 text-[10px] flex-shrink-0">●</span>
                         <span>
-                            <span className={colorClass}>{label}</span>：{content}
+                            <span className="font-bold text-[#57534e]">{label}</span>：{content}
                         </span>
                     </li>
                 );
@@ -609,7 +605,7 @@
                                             onClick={() => setSelectedEvent({...event, theme})}
                                         >
                                             {event.booking && (
-                                                <div className="absolute top-0 right-0 bg-[#c08497] text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-lg z-10">
+                                                <div className="absolute top-0 right-0 bg-[#c08497] text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-lg z-10 shadow-sm">
                                                     予約済
                                                 </div>
                                             )}
@@ -848,7 +844,15 @@
                         </div>
                     </div>
 
-                    <div className="mt-6">
+                    <button 
+                        onClick={() => window.open('https://www.google.com/maps/search/?api=1&query=public+toilet', '_blank')}
+                        className="w-full bg-[#9cad95] text-white p-4 rounded-xl shadow-lg shadow-[#9cad95]/20 flex items-center justify-center font-bold active:scale-95 transition-transform mt-4"
+                    >
+                        <Icon name="map" size={18} className="mr-2" />
+                        尋找公廁 (Public Toilet Map)
+                    </button>
+
+                    <div className="mt-4">
                         <button 
                             onClick={() => window.open('https://www.vjw.digital.go.jp/', '_blank')}
                             className="w-full bg-[#8f9eaf] text-white p-4 rounded-xl shadow-lg shadow-[#8f9eaf]/20 flex items-center justify-center font-bold active:scale-95 transition-transform"
