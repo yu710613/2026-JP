@@ -107,7 +107,7 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 完整行程資料 ---
+        // --- 完整行程資料 (Day 3 Shops Updated) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
@@ -271,9 +271,15 @@
                         about: { title: "交通指引", content: "阪急嵐山線「嵐山站」往桂方向至「桂站」轉乘阪急京都線往京都河原町方向「烏丸站」下車。" }
                     },
                     { time: "17:30", type: "sight", title: "住む街でアートを楽しむ", address: "京都市中京区", nav: "Kyoto Art Walk", hours: "24H", guide: ["內容：欣賞京都街頭的藝術氛圍與建築。"] },
-                    { time: "18:00", type: "shop", title: "藤井大丸百貨", address: "京都市下京区寺町通四条下ル貞安前之町605", nav: "Fujii Daimaru", tags: ["購物"], hours: "10:30-20:00", guide: ["特色：年輕時尚潮流品牌聚集。", "推薦：BEAMS、UNITED ARROWS 等選貨店。"] },
+                    { 
+                        time: "18:00", type: "shop", title: "藤井大丸百貨", address: "京都市下京区寺町通四条下ル貞安前之町605", nav: "Fujii Daimaru", tags: ["購物"], hours: "10:30-20:00", 
+                        guide: ["特色：年輕時尚潮流品牌聚集。", "推薦：BEAMS、UNITED ARROWS 等選貨店。", "必去：Marimekko 京都／MAISEMA"] 
+                    },
                     { time: "18:30", type: "shop", title: "SOU・SOU", address: "京都市中京区新京極通四条上ル中之町583-3", nav: "SOU・SOU Kyoto", tags: ["必逛"], hours: "11:00-20:00", guide: ["必買：數字圖案的足袋、和風小物。", "分店：附近有多家不同主題的分店 (布料、童裝等)。"] },
-                    { time: "19:00", type: "shop", title: "京都高島屋百貨", address: "京都市下京区四条通河原町西入真町52", nav: "Kyoto Takashimaya", tags: ["購物"], hours: "10:00-20:00", guide: ["美食：B1 地下街美食豐富。", "品牌：國際精品與化妝品齊全。"] },
+                    { 
+                        time: "19:00", type: "shop", title: "京都高島屋百貨", address: "京都市下京区四条通河原町西入真町52", nav: "Kyoto Takashimaya", tags: ["購物"], hours: "10:00-20:00", 
+                        guide: ["美食：B1 地下街美食豐富。", "品牌：國際精品與化妝品齊全。", "必去：THE NORTH FACE／New Balance 京都髙島屋S.C.店"] 
+                    },
                     { time: "19:30", type: "sight", title: "錦天滿宮", address: "京都市中京区新京極通り四条上る中之町537", nav: "Nishiki Tenmangu", tags: ["祈福"], hours: "08:00-20:00", guide: ["特色：位於錦市場盡頭，鳥居嵌入建築物中。", "祈求：學問之神，求智慧。"] },
                     { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", hours: "10:00-20:00", guide: ["動漫迷聖地。"] },
                     { time: "21:00", type: "food", title: "一蘭拉麵", address: "京都市中京区蛸薬師通新京極東入裏寺町598", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"], hours: "10:00-06:00", guide: ["口味：完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"] },
