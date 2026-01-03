@@ -16,8 +16,8 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #fdfcf8; /* 和紙白 */
-            color: #374151;
+            background-color: #f5f5f4; /* 淺灰背景，對比出白卡 */
+            color: #44403c;
             -webkit-tap-highlight-color: transparent;
             padding-bottom: env(safe-area-inset-bottom);
         }
@@ -27,48 +27,39 @@
         /* 列表卡片 */
         .event-card {
             background: #ffffff;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            transition: transform 0.1s ease;
+            position: relative;
+            border: 1px solid white;
         }
-        .event-card:active { transform: scale(0.98); background-color: #fafafa; }
+        .event-card:active { transform: scale(0.98); background-color: #fafaf9; }
 
         /* 時間軸 */
         .timeline-line {
             position: absolute;
-            left: 20px;
-            top: 45px;
-            bottom: -20px;
-            width: 1px;
-            border-left: 1px dashed #d1d5db;
+            left: 24px;
+            top: 48px;
+            bottom: -24px;
+            width: 2px;
+            background-color: #e7e5e4;
             z-index: 0;
         }
         .last-item .timeline-line { display: none; }
 
-        /* 彈窗動畫 */
-        @keyframes modalSlideUp {
+        /* 彈窗動畫 (Bottom Sheet) */
+        @keyframes slideUp {
             0% { transform: translateY(100%); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
         }
-        .modal-content {
-            animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            border-radius: 20px 20px 0 0;
+        .modal-enter {
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        @media (min-width: 640px) {
-            .modal-content {
-                border-radius: 20px;
-                animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            }
-        }
-        @keyframes modalPop {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        /* 重點高亮樣式 */
-        .hl-red { color: #be123c; font-weight: 700; background-color: #ffe4e6; padding: 0 4px; border-radius: 4px; }
-        .hl-blue { color: #1d4ed8; font-weight: 700; background-color: #dbeafe; padding: 0 4px; border-radius: 4px; font-family: monospace; }
-        .hl-amber { color: #b45309; font-weight: 700; background-color: #fef3c7; padding: 0 4px; border-radius: 4px; }
+        
+        /* 高亮樣式 */
+        .hl-red { color: #dc2626; font-weight: 700; background-color: #fecaca; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
+        .hl-blue { color: #2563eb; font-weight: 700; background-color: #dbeafe; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
+        .hl-amber { color: #d97706; font-weight: 700; background-color: #fef3c7; padding: 0 4px; border-radius: 4px; margin: 0 2px; }
     </style>
 </head>
 <body>
@@ -77,7 +68,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- v9.0 完整行程資料 (復原版) + 深度導遊內容 ---
+        // --- 行程資料庫 ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", temp: "6-10°C", condition: "Cloudy",
@@ -94,8 +85,7 @@
                     },
                     { 
                         time: "17:20", type: "shop", title: "阪急百貨", address: "大阪市北區角田町8-7", nav: "Hankyu Umeda Main Store", tags: ["購物"],
-                        guide: ["必逛：B1 美食街伴手禮一級戰區。", "推薦：Baton d'or 高級Pocky。"],
-                        about: { title: "購物殿堂", content: "關西地區最高檔的百貨公司，擁有最齊全的甜點伴手禮品牌。" }
+                        guide: ["必逛：B1 美食街伴手禮一級戰區。", "推薦：Baton d'or 高級Pocky。"]
                     },
                     { 
                         time: "17:50", type: "food", title: "grenier Umeda", address: "阪急 Grand Building 1F", nav: "grenier Umeda", tags: ["必吃", "排隊"],
@@ -245,6 +235,7 @@
             { name: "ホテルビスタプレミオ京都 和邸", date: "1/13-1/15", address: "京都市中京區六角通新町西入", tel: "075-252-1666", nav: "Hotel Vista Premio Kyoto Nagomitei" }
         ];
 
+        // --- 組件 ---
         const App = () => {
             const [selectedDay, setSelectedDay] = useState("Day 1");
             const [activeTab, setActiveTab] = useState("schedule");
@@ -256,7 +247,6 @@
                 window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}&travelmode=driving`, '_blank');
             };
 
-            // 關鍵字高亮邏輯
             const parseGuideText = (text) => {
                 const keywords = ["必吃", "必買", "必點", "必拍", "預約", "攻略", "注意", "推薦", "★"];
                 const parts = text.split(new RegExp(`(${keywords.join('|')})`, 'g'));
@@ -273,16 +263,13 @@
 
             const renderSchedule = () => {
                 const currentData = itineraryData[selectedDay];
-                let weatherIcon = <i data-lucide="cloud" className="w-10 h-10 text-gray-300"></i>;
-                if (currentData.condition === "Sunny") weatherIcon = <i data-lucide="sun" className="w-10 h-10 text-orange-400"></i>;
-                if (currentData.condition === "Partly Cloudy") weatherIcon = <i data-lucide="cloud-sun" className="w-10 h-10 text-yellow-400"></i>;
-
+                
                 return (
                     <div className="pb-24 animate-fade-in">
-                        {/* Header */}
-                        <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-4 pb-2 border-b border-gray-100 shadow-sm">
-                            <h1 className="text-center text-xl font-serif font-bold text-gray-800 mb-3 tracking-widest">2026 京阪旅行</h1>
-                            <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 pb-2">
+                        {/* Date Header */}
+                        <div className="sticky top-0 z-20 bg-[#f5f5f4]/95 backdrop-blur-sm pt-4 pb-3 border-b border-gray-200">
+                            <h1 className="text-center text-xl font-serif font-bold text-gray-800 mb-4 tracking-widest">2026 京阪旅行</h1>
+                            <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 pb-1">
                                 {Object.keys(itineraryData).map(day => (
                                     <button 
                                         key={day}
@@ -290,7 +277,7 @@
                                         className={`flex-shrink-0 px-4 py-2 rounded-full transition-all duration-300 flex flex-col items-center min-w-[64px] ${
                                             selectedDay === day 
                                             ? 'bg-gray-800 text-white shadow-lg transform scale-105' 
-                                            : 'bg-white text-gray-400 border border-gray-200'
+                                            : 'bg-white text-gray-400 border border-gray-300'
                                         }`}
                                     >
                                         <span className="text-[10px] uppercase font-bold tracking-wider">{itineraryData[day].weekday}</span>
@@ -300,66 +287,65 @@
                             </div>
                         </div>
 
-                        {/* Weather Card */}
-                        <div className="px-5 mt-6 mb-4">
-                            <div className="bg-white border border-gray-200 rounded-xl p-5 flex items-center justify-between shadow-sm">
-                                <div>
-                                    <div className="flex items-center space-x-2 text-gray-400 text-xs font-medium uppercase tracking-widest mb-1">
-                                        <i data-lucide="map-pin" className="w-3 h-3"></i>
-                                        <span>{currentData.area}</span>
-                                    </div>
-                                    <div className="text-3xl font-serif text-gray-800 tracking-tight">{currentData.temp}</div>
-                                    <div className="text-gray-500 text-xs mt-1">{currentData.condition}</div>
+                        {/* Weather Summary */}
+                        <div className="px-5 mt-6 mb-2">
+                            <div className="flex items-center justify-between text-gray-500 text-xs font-medium bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
+                                <div className="flex items-center">
+                                    <i data-lucide="map-pin" className="w-3 h-3 mr-1"></i>
+                                    {currentData.area}
                                 </div>
-                                {weatherIcon}
+                                <div className="flex items-center">
+                                    <span className="mr-2">{currentData.condition}</span>
+                                    <span className="font-bold text-gray-800">{currentData.temp}</span>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Timeline List */}
+                        {/* Event List */}
                         <div className="px-5 mt-6 space-y-4 relative">
                              {currentData.events.map((event, index) => {
                                  const isLast = index === currentData.events.length - 1;
+                                 let iconName = 'info';
                                  let accentColor = "bg-gray-400";
-                                 if (event.type === 'food') accentColor = "bg-orange-400";
-                                 if (event.type === 'shop') accentColor = "bg-rose-400";
-                                 if (event.type === 'transport') accentColor = "bg-blue-400";
-                                 if (event.type === 'hotel') accentColor = "bg-purple-500";
-                                 if (event.type === 'sight') accentColor = "bg-emerald-500";
+                                 let dotColor = "border-gray-300";
+                                 
+                                 if (event.type === 'food') { iconName='utensils'; accentColor = "bg-orange-500"; dotColor = "border-orange-400"; }
+                                 if (event.type === 'shop') { iconName='shopping-bag'; accentColor = "bg-rose-500"; dotColor = "border-rose-400"; }
+                                 if (event.type === 'transport') { iconName='train'; accentColor = "bg-blue-500"; dotColor = "border-blue-400"; }
+                                 if (event.type === 'hotel') { iconName='bed-double'; accentColor = "bg-purple-500"; dotColor = "border-purple-400"; }
+                                 if (event.type === 'sight') { iconName='camera'; accentColor = "bg-emerald-500"; dotColor = "border-emerald-400"; }
 
                                  return (
-                                    <div key={index} className={`relative pl-10 ${isLast ? 'last-item' : ''}`}>
+                                    <div key={index} className={`relative pl-12 ${isLast ? 'last-item' : ''}`}>
                                         <div className="timeline-line"></div>
-                                        <div className="absolute left-0 top-1 flex flex-col items-center z-10">
-                                            <div className={`w-3 h-3 rounded-full border-2 bg-white ${
-                                                event.type === 'food' ? 'border-orange-400' :
-                                                event.type === 'shop' ? 'border-pink-400' :
-                                                event.type === 'transport' ? 'border-blue-400' :
-                                                event.type === 'hotel' ? 'border-purple-400' :
-                                                'border-emerald-400'
-                                            }`}></div>
+                                        
+                                        {/* Timeline Dot */}
+                                        <div className="absolute left-0 top-6 flex flex-col items-center z-10 w-12 text-center">
+                                            <span className="text-[10px] font-mono font-bold text-gray-400 mb-1 block">{event.time}</span>
+                                            <div className={`w-3 h-3 rounded-full border-2 bg-white ${dotColor}`}></div>
                                         </div>
 
                                         <div 
-                                            className="event-card rounded-xl p-4 cursor-pointer flex justify-between items-center"
-                                            onClick={() => setSelectedEvent({...event, accentColor})}
+                                            className="event-card p-4 cursor-pointer"
+                                            onClick={() => setSelectedEvent({...event, accentColor, iconName})}
                                         >
-                                            <div className="flex-1">
-                                                <div className="flex items-center space-x-2 mb-1">
-                                                    <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-full ${accentColor}`}>
-                                                        {event.type.toUpperCase()}
-                                                    </span>
-                                                    <span className="text-xs font-mono font-medium text-gray-500">{event.time}</span>
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex-1 pr-4">
+                                                    <div className="flex items-center space-x-2 mb-1">
+                                                        <span className={`text-[9px] font-bold text-white px-2 py-0.5 rounded-full ${accentColor}`}>
+                                                            {event.type.toUpperCase()}
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="text-base font-bold text-gray-800 serif leading-tight mb-1">
+                                                        {event.title}
+                                                    </h3>
+                                                    <p className="text-xs text-gray-400 flex items-center truncate">
+                                                        {event.address}
+                                                    </p>
                                                 </div>
-                                                <h3 className="text-base font-bold text-gray-800 serif leading-tight mb-1">
-                                                    {event.title}
-                                                </h3>
-                                                <p className="text-xs text-gray-400 flex items-center">
-                                                    <i data-lucide="map-pin" className="w-3 h-3 mr-1"></i>
-                                                    {event.address}
-                                                </p>
-                                            </div>
-                                            <div className="text-gray-300">
-                                                <i data-lucide="chevron-right" className="w-5 h-5"></i>
+                                                <div className="text-gray-300 mt-2">
+                                                    <i data-lucide="chevron-right" className="w-5 h-5"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -369,50 +355,50 @@
 
                         {/* Modal Popup */}
                         {selectedEvent && (
-                            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-5">
+                            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
                                 <div 
-                                    className="absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity"
+                                    className="absolute inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity"
                                     onClick={() => setSelectedEvent(null)}
                                 ></div>
                                 
-                                <div className="modal-content relative bg-white w-full sm:max-w-md h-[85vh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col">
+                                <div className="modal-content modal-enter relative bg-white w-full sm:max-w-md h-[80vh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col">
+                                    
                                     {/* Modal Header */}
-                                    <div className="p-6 pb-2 bg-white z-10 border-b border-gray-50">
-                                        <div className="flex justify-between items-start mb-2">
+                                    <div className="p-6 pb-4 bg-white z-10 border-b border-gray-100">
+                                        <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center space-x-2">
                                                 <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-full ${selectedEvent.accentColor}`}>
                                                     {selectedEvent.type.toUpperCase()}
                                                 </span>
                                                 <span className="text-sm font-mono font-bold text-gray-500">{selectedEvent.time}</span>
                                             </div>
-                                            <button onClick={() => setSelectedEvent(null)} className="bg-gray-100 rounded-full p-2 text-gray-500">
+                                            <button onClick={() => setSelectedEvent(null)} className="bg-gray-50 rounded-full p-2 text-gray-400 hover:bg-gray-100">
                                                 <i data-lucide="x" className="w-5 h-5"></i>
                                             </button>
                                         </div>
-                                        <h2 className="text-2xl font-serif font-bold text-gray-800 leading-tight mb-1">
+                                        <h2 className="text-2xl font-serif font-bold text-gray-800 leading-tight mb-2">
                                             {selectedEvent.title}
                                         </h2>
-                                        <div className="flex items-start text-xs text-gray-500">
-                                            <i data-lucide="map-pin" className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0"></i>
-                                            <span>{selectedEvent.address}</span>
+                                        <div className="flex items-start text-xs text-gray-500 bg-gray-50 p-2 rounded-lg">
+                                            <i data-lucide="map-pin" className="w-3 h-3 mr-2 mt-0.5 flex-shrink-0"></i>
+                                            <span className="leading-relaxed">{selectedEvent.address}</span>
                                         </div>
                                     </div>
 
                                     {/* Modal Body */}
-                                    <div className="flex-1 overflow-y-auto p-6 bg-white space-y-6">
+                                    <div className="flex-1 overflow-y-auto p-6 bg-white space-y-8">
+                                        
                                         {/* Guide Note */}
                                         {selectedEvent.guide && (
                                             <div>
                                                 <div className="flex items-center space-x-2 mb-3">
-                                                    <div className="bg-amber-100 p-1.5 rounded-md text-amber-600">
-                                                        <i data-lucide="book-open" className="w-4 h-4"></i>
-                                                    </div>
-                                                    <h3 className="font-bold text-gray-800 text-sm">導遊筆記 GUIDE NOTE</h3>
+                                                    <i data-lucide="book-open" className="w-4 h-4 text-gray-400"></i>
+                                                    <h3 className="font-bold text-gray-800 text-sm tracking-wide">導遊筆記 GUIDE NOTE</h3>
                                                 </div>
-                                                <ul className="space-y-3">
+                                                <ul className="space-y-3 pl-1">
                                                     {selectedEvent.guide.map((note, i) => (
-                                                        <li key={i} className="flex items-start text-sm text-gray-600 leading-relaxed">
-                                                            <span className="text-amber-400 mr-2 mt-1">•</span>
+                                                        <li key={i} className="flex items-start text-sm text-gray-600 leading-7">
+                                                            <span className="text-gray-300 mr-3 mt-1.5 text-[8px]">●</span>
                                                             <span>{parseGuideText(note)}</span>
                                                         </li>
                                                     ))}
@@ -420,17 +406,14 @@
                                             </div>
                                         )}
 
-                                        {/* Divider */}
-                                        {selectedEvent.about && <div className="border-t border-dashed border-gray-200"></div>}
-
                                         {/* About Section */}
                                         {selectedEvent.about && (
-                                            <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                                                <h3 className="font-serif font-bold text-gray-800 text-sm mb-2 flex items-center">
-                                                    <i data-lucide="sparkles" className="w-3 h-3 mr-1 text-purple-500"></i>
+                                            <div className="bg-[#f8fafc] rounded-xl p-5 border border-gray-100">
+                                                <h3 className="font-serif font-bold text-gray-700 text-sm mb-2 flex items-center">
+                                                    <i data-lucide="sparkles" className="w-3 h-3 mr-2 text-purple-400"></i>
                                                     {selectedEvent.about.title}
                                                 </h3>
-                                                <p className="text-xs text-gray-600 leading-relaxed text-justify">
+                                                <p className="text-xs text-gray-500 leading-relaxed text-justify">
                                                     {selectedEvent.about.content}
                                                 </p>
                                             </div>
@@ -438,7 +421,7 @@
                                         
                                         {/* Tags */}
                                         {selectedEvent.tags && (
-                                            <div className="flex flex-wrap gap-2 pt-2">
+                                            <div className="flex flex-wrap gap-2">
                                                 {selectedEvent.tags.map((tag, i) => (
                                                     <span key={i} className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-500 bg-white">
                                                         #{tag}
@@ -454,7 +437,7 @@
                                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100">
                                         <button 
                                             onClick={() => handleNav(selectedEvent.nav)}
-                                            className={`w-full py-3.5 rounded-xl text-white text-sm font-bold flex items-center justify-center shadow-lg active:scale-95 transition-transform ${selectedEvent.accentColor}`}
+                                            className="w-full py-3.5 rounded-xl text-white text-sm font-bold flex items-center justify-center shadow-lg active:scale-95 transition-transform bg-gray-800"
                                         >
                                             <i data-lucide="navigation" className="w-4 h-4 mr-2"></i>
                                             開啟 Google Maps 導航
@@ -471,7 +454,7 @@
                 <div className="px-5 py-8 pb-24 animate-fade-in">
                     <h2 className="text-xl font-serif font-bold text-gray-800 mb-6 border-b pb-2 border-gray-200">旅程資訊</h2>
                     {hotelInfos.map((hotel, i) => (
-                        <div key={i} className="event-card p-5 rounded-xl mb-4" onClick={() => handleNav(hotel.nav)}>
+                        <div key={i} className="event-card p-5 mb-4" onClick={() => handleNav(hotel.nav)}>
                             <div className="pl-1">
                                 <h3 className="serif font-bold text-base text-gray-800">{hotel.name}</h3>
                                 <p className="text-xs text-gray-400 mt-1 font-mono mb-2">{hotel.date}</p>
@@ -484,10 +467,10 @@
                     ))}
                     
                     <div className="grid grid-cols-2 gap-4 mt-6">
-                         <div className="bg-rose-50 p-4 rounded-xl flex flex-col items-center justify-center border border-rose-100">
-                            <i data-lucide="phone-call" className="w-6 h-6 text-rose-400 mb-2"></i>
-                            <span className="text-rose-800 font-bold text-sm">110 / 119</span>
-                            <span className="text-[10px] text-rose-400 mt-1">緊急電話</span>
+                         <div className="bg-red-50 p-4 rounded-xl flex flex-col items-center justify-center border border-red-100">
+                            <i data-lucide="phone-call" className="w-6 h-6 text-red-400 mb-2"></i>
+                            <span className="text-red-800 font-bold text-sm">110 / 119</span>
+                            <span className="text-[10px] text-red-400 mt-1">緊急電話</span>
                         </div>
                         <div className="bg-emerald-50 p-4 rounded-xl flex flex-col items-center justify-center border border-emerald-100">
                              <a href="https://transit.yahoo.co.jp/" target="_blank" className="flex flex-col items-center">
