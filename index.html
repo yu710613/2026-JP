@@ -101,7 +101,7 @@
             return hours;
         };
 
-        // --- 完整行程資料 (Updated with DAY2 & DAY3 changes) ---
+        // --- 完整行程資料 (Day 4 Updated) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", temp: "6-10°C", condition: "Cloudy",
@@ -179,7 +179,7 @@
                     { time: "11:30", type: "shop", title: "心齋橋筋商店街", address: "大阪府大阪市中央区心斎橋筋", nav: "Shinsaibashi-Suji", guide: ["重點：藥妝比價、Uniqlo 旗艦店。"] },
                     { 
                         time: "13:00", type: "food", title: "牛かつもと村", address: "大阪府大阪市中央区難波3-3-1", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["必吃", "排隊"],
-                        guide: ["必點菜單：炸牛排定食 (130g)。", "吃法：石板上煎至喜歡熟度，沾芥末醬油。", "重要：建議提早 10 分鐘到店。"],
+                        guide: ["★ 必點菜單：炸牛排定食 (130g)。", "吃法：石板上煎至喜歡熟度，沾芥末醬油。", "重要：建議提早 10 分鐘到店。"],
                         about: { title: "美味秘密", content: "只炸 60 秒的半熟牛肉，外酥內嫩，是日本炸牛排風潮的代表名店。" }
                     },
                     { time: "14:00", type: "food", title: "章魚燒道樂 Wanaka", address: "大阪府大阪市中央区道頓堀1-6-12", nav: "Takoyaki Wanaka Dotonbori", guide: ["道頓堀排隊點心。"] },
@@ -298,15 +298,36 @@
                     },
                     { 
                         time: "09:30", type: "shop", title: "清水坂 / 產寧坂", address: "京都市東山区清水2-256", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"],
-                        guide: ["必買：MALEBRANCHE 茶之菓 (抹茶餅乾)。", "必逛：七味家本舖 (七味粉)、SOU・SOU 清水店。"]
+                        guide: [
+                            "必買：京都北山MALEBRANCHE (茶之菓)。",
+                            "必逛：七味家本舗、伊藤軒／SOU・SOU清水店。",
+                            "特色：七味唐辛子 OCHANOKOSAISAI、京都 JIZO堂。",
+                            "推薦：Nittodo Kyoto Cafe、京都烏丸六七堂 (八坂通店)。"
+                        ]
                     },
                     { time: "11:30", type: "sight", title: "八阪庚申堂", address: "京都市東山区金園町390", nav: "Yasaka Koshin-do", guide: ["色彩繽紛的束猿 (結緣猴)，IG 打卡熱點。"] },
                     { time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山区祇園町南側", nav: "Gion Unagi Kawatō", guide: ["午餐推薦：鰻魚飯三吃。"] },
-                    { time: "13:30", type: "shop", title: "Miffy's Kitchen", address: "京都市東山区祇園町北側244", nav: "Miffy's Kitchen Gion", guide: ["米飛兔造型麵包。", "順道去祇園白川散步。"] },
+                    { 
+                        time: "13:30", type: "shop", title: "Miffy's Oyatsu-do by Miffy's Kitchen Gion", address: "京都市東山区祇園町南側", nav: "Miffy's Oyatsu-do Gion", tags: ["可愛"],
+                        guide: ["みっふぃーおやつ堂：米飛兔造型點心、雜貨。"]
+                    },
+                    { 
+                        time: "13:45", type: "shop", title: "最強一味", address: "京都市東山区", nav: "Saikyo Ichimi", 
+                        guide: ["特色：京都超辣辣椒粉，適合喜歡吃辣的人。"]
+                    },
+                    { 
+                        time: "14:00", type: "sight", title: "祇園白川／祇園商店街", address: "京都市東山区", nav: "Gion Shirakawa", tags: ["散步"],
+                        guide: ["必拍：巽橋、柳樹與町家建築。", "氛圍：最具京都風情的街道。"]
+                    },
                     { time: "14:30", type: "sight", title: "下鴨神社", address: "京都市左京区下鴨泉川町59", nav: "Shimogamo Shrine", guide: ["糺之森散步。", "河合神社：祈求美麗的鏡繪馬。"] },
                     { 
                         time: "16:30", type: "shop", title: "河原町雜貨巡禮", address: "京都市中京区河原町三条上ル西側", nav: "Angers Kawaramachi", tags: ["必逛"],
-                        guide: ["重點店鋪：ANGERS (文具雜貨)、MoMA Design Store、HUMAN MADE 1928、Today's Special。"]
+                        guide: [
+                            "必喝：HUMAN MADE 1928 咖啡 by 藍瓶咖啡。",
+                            "必逛雜貨：ANGERS 河原町本店、MoMA Design Store 京都、TODAY'S SPECIAL、Madu。",
+                            "特色店鋪：ペアキーホルダー専門店 2/8b (鑰匙圈)、mumokuteki goods & wears。",
+                            "商圈：新京極商店街、錦市場、唐吉訶德。"
+                        ]
                     },
                     { 
                         time: "20:00", type: "food", title: "六角ace", address: "京都市中京区大阪材木町696-4", nav: "Rokkaku Ace", tags: ["推薦", "需預約"],
@@ -319,7 +340,7 @@
                 events: [ 
                     { 
                         time: "07:00", type: "sight", title: "伏見稻荷大社", address: "京都市伏見区深草藪之内町68", nav: "Fushimi Inari Taisha", tags: ["必拍"],
-                        guide: ["攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"],
+                        guide: ["★ 攻略：千本鳥居前段人多，走到『奧社』後人較少。", "必買：狐狸造型繪馬。"],
                         about: { title: "千本鳥居", content: "全日本三萬座稻荷神社總本宮。紅色鳥居是信徒供奉，象徵對神明保佑五穀豐收、生意興隆的感謝。" }
                     },
                     { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京区押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
