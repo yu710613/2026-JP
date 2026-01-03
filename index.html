@@ -16,7 +16,7 @@
 
     <style>
         :root {
-            --bg-color: #fdfcf8; /* 米白 */
+            --bg-color: #fdfcf8; /* 日式淺米色 */
             --card-bg: #ffffff;
             --text-main: #57534e; /* 暖深灰 (Stone-600) */
             --text-light: #a8a29e; /* 淺灰 (Stone-400) */
@@ -63,8 +63,8 @@
             left: 24px;
             top: 48px;
             bottom: -24px;
-            width: 1px; /* 更細 */
-            background-color: #d6d3d1; /* Stone-300 */
+            width: 1px;
+            background-color: #d6d3d1;
             z-index: 0;
         }
         .last-item .timeline-line { display: none; }
@@ -100,7 +100,7 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 行程資料 (含座標用於天氣) ---
+        // --- 完整行程資料 (Day 1-5 Updated) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
@@ -290,7 +290,7 @@
                         const currentHourIndex = new Date().getHours();
                         const next24 = [];
                         for(let i=0; i<24; i++) {
-                            const idx = currentHourIndex + i; // simplistic logic, usually need to match time string
+                            const idx = currentHourIndex + i; 
                             if (hourly.time[idx]) {
                                 const timeStr = hourly.time[idx].split('T')[1].substring(0,5);
                                 const code = hourly.weathercode[idx];
@@ -329,7 +329,7 @@
                 const currentData = itineraryData[selectedDay];
 
                 return (
-                    <div className="pb-32 animate-fade-in">
+                    <div className="pb-40 animate-fade-in">
                         {/* Header */}
                         <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-4 pb-3 border-b border-stone-200/50">
                             <h1 className="text-center text-[17px] serif font-bold text-[#44403c] mb-3 tracking-[0.1em] flex items-center justify-center">
@@ -396,21 +396,22 @@
                                             className="event-card p-4 cursor-pointer"
                                             onClick={() => setSelectedEvent({...event, theme})}
                                         >
-                                            <div className="flex justify-between items-start">
-                                                <div className="flex-1 pr-4">
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex-1 pr-4 min-w-0">
                                                     <div className="flex items-center space-x-2 mb-1">
                                                         <span className={`text-[9px] font-bold text-white px-2 py-0.5 rounded-full ${theme.bg}`}>
                                                             {event.type.toUpperCase()}
                                                         </span>
                                                     </div>
-                                                    <h3 className="text-base font-bold text-[#57534e] serif leading-tight mb-1">
+                                                    <h3 className="text-base font-bold text-[#57534e] serif leading-tight mb-1 truncate">
                                                         {event.title}
                                                     </h3>
-                                                    <p className="text-xs text-[#a8a29e] flex items-center truncate">
-                                                        {event.address}
-                                                    </p>
+                                                    <div className="flex items-center text-xs text-[#a8a29e] mt-1">
+                                                        <Icon name="map" size={12} className="mr-1 flex-shrink-0" />
+                                                        <span className="truncate">{event.address}</span>
+                                                    </div>
                                                 </div>
-                                                <div className="text-stone-300 mt-2">
+                                                <div className="text-stone-300">
                                                     <Icon name="chevron-right" size={20} />
                                                 </div>
                                             </div>
