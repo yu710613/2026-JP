@@ -132,10 +132,10 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 行李清單資料 ---
+        // --- 行李清單資料 (已移除手機) ---
         const packingList = {
             "重要證件": ["護照", "身分證", "電子簽證/紙本簽證", "登機證/機票證明", "保險卡", "信用卡", "日幣現金", "台幣千元鈔(備用)", "駕照/譯本", "交通卡/周遊券"],
-            "3C 產品": ["手機", "耳機", "SIM卡/eSIM", "充電器(各類)", "相機", "萬國插頭", "記憶卡/備用電池", "自拍棒/腳架(管徑<1cm)", "行動電源(不可超過2個)"],
+            "3C 產品": ["耳機", "SIM卡/eSIM", "充電器(各類)", "相機", "萬國插頭", "記憶卡/備用電池", "自拍棒/腳架(管徑<1cm)", "行動電源(不可超過2個)"],
             "生活用品": ["盥洗用品(分裝)", "牙刷/牙線", "常備藥品", "衛生紙/濕紙巾", "保養品", "隱形眼鏡/藥水", "折疊雨傘", "生理用品", "吹風機/離子夾", "刮鬍刀"],
             "衣物": ["上衣", "下身", "內衣褲", "睡衣", "發熱衣/褲", "襪子", "外套", "帽子", "飾品", "好走的鞋"],
             "其他": ["口罩", "太陽眼鏡", "拖鞋", "隨身小包", "購物袋"]
@@ -609,7 +609,7 @@
                                             onClick={() => setSelectedEvent({...event, theme})}
                                         >
                                             {event.booking && (
-                                                <div className="absolute top-0 right-0 bg-[#d6bd8d] text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-lg z-10">
+                                                <div className="absolute top-0 right-0 bg-[#c08497] text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-lg z-10">
                                                     予約済
                                                 </div>
                                             )}
@@ -632,9 +632,6 @@
                                                         <Icon name="map" size={10} className="mr-1 flex-shrink-0" />
                                                         <span className="truncate">{event.address}</span>
                                                     </div>
-                                                </div>
-                                                <div className="text-stone-300 mt-2">
-                                                    <Icon name="chevron-right" size={20} />
                                                 </div>
                                             </div>
                                         </div>
