@@ -127,27 +127,12 @@
                     },
                     { 
                         time: "18:20", type: "shop", title: "LUCUA 1100", address: "大阪府大阪市北区梅田3-1-3", nav: "LUCUA 1100", tags: ["購物"], hours: "10:30-20:30",
-                        guide: [
-                            "B1｜uniqlo ／GU／nutural kitchen",
-                            "1F｜三麗鷗",
-                            "2F｜米菲兔／JO MALONE／DIPTYQUE",
-                            "3F｜Aēsop／@cosme",
-                            "5F｜Disney Store／afternoon tea living",
-                            "6F｜ABC MART",
-                            "7F｜Unico (家居雜貨)",
-                            "8F｜北臉男裝"
-                        ],
+                        guide: ["B1｜uniqlo ／GU／nutural kitchen", "1F｜三麗鷗", "2F｜米菲兔／JO MALONE／DIPTYQUE", "3F｜Aēsop／@cosme", "5F｜Disney Store／afternoon tea living", "6F｜ABC MART", "7F｜Unico (家居雜貨)", "8F｜北臉男裝"],
                         about: { title: "交通指引", content: "可由阪急百貨2F聯通橋前往。" }
                     },
                     { 
                         time: "18:50", type: "shop", title: "LUCUA", address: "大阪府大阪市北区梅田3-1-3", nav: "LUCUA", tags: ["購物"], hours: "10:30-20:30",
-                        guide: [
-                            "B1｜3COINS／餐飲+伴手禮",
-                            "1F｜convers tokyo",
-                            "6F｜Plaza／靴下屋",
-                            "8F｜LUSH／無印良品／3COINS plus",
-                            "9F｜Loft（文具雜貨天堂！）"
-                        ],
+                        guide: ["B1｜3COINS／餐飲+伴手禮", "1F｜convers tokyo", "6F｜Plaza／靴下屋", "8F｜LUSH／無印良品／3COINS plus", "9F｜Loft（文具雜貨天堂！）"],
                         about: { title: "樓層資訊", content: "B1、1F、2F、3F、5F、7F可與 LUCUA 1100 互通。" }
                     },
                     { 
@@ -343,7 +328,8 @@
                 "calendar-days": <i data-lucide="calendar-days" className={className}></i>,
                 phone: <i data-lucide="phone" className={className}></i>,
                 "external-link": <i data-lucide="external-link" className={className}></i>,
-                clock: <i data-lucide="clock" className={className}></i>
+                clock: <i data-lucide="clock" className={className}></i>,
+                refresh: <i data-lucide="refresh-cw" className={className}></i>
             };
             return icons[name] || icons.info;
         };
@@ -370,7 +356,6 @@
                     </li>
                 );
             } else if (cleanText.includes('｜')) {
-                // Handle floor guide
                 const parts = cleanText.split('｜');
                 return (
                     <li className="flex items-start text-sm text-stone-500 leading-relaxed mb-1.5 ml-2">
@@ -392,16 +377,25 @@
             const [selectedDay, setSelectedDay] = useState("Day 1");
             const [activeTab, setActiveTab] = useState("schedule");
             const [selectedEvent, setSelectedEvent] = useState(null);
+            
+            // Weather
             const [currentTemp, setCurrentTemp] = useState("--");
             const [currentCondition, setCurrentCondition] = useState("Loading...");
             const [hourlyForecast, setHourlyForecast] = useState([]);
 
+            // Currency
+            const [exchangeRate, setExchangeRate] = useState(0.215);
+            const [inputVal, setInputVal] = useState(1000);
+            const [direction, setDirection] = useState(true); // true: JPY->TWD
+
             useEffect(() => { lucide.createIcons(); }, [selectedDay, activeTab, selectedEvent, hourlyForecast]);
 
+            // Weather & Currency Fetch
             useEffect(() => {
                 const fetchData = async () => {
                     const { lat, lon } = itineraryData[selectedDay];
                     try {
+                        // Weather
                         const res = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&current_weather=true&timezone=Asia%2FTokyo`);
                         const current = res.data.current_weather;
                         const hourly = res.data.hourly;
@@ -428,8 +422,15 @@
                             }
                         }
                         setHourlyForecast(next24);
+
+                        // Currency
+                        const rateRes = await axios.get('https://api.exchangerate-api.com/v4/latest/JPY');
+                        if (rateRes.data && rateRes.data.rates && rateRes.data.rates.TWD) {
+                            setExchangeRate(rateRes.data.rates.TWD);
+                        }
+
                     } catch (error) {
-                        console.error("Weather fetch failed", error);
+                        console.error("API fetch failed", error);
                         setCurrentTemp("10°C");
                         setCurrentCondition("Cloudy");
                         setHourlyForecast(generateHourlyWeather("Cloudy"));
@@ -442,11 +443,18 @@
                 window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}&travelmode=driving`, '_blank');
             };
 
+            const toggleDirection = () => setDirection(!direction);
+            
+            const calculatedVal = direction 
+                ? (inputVal * exchangeRate).toFixed(0) 
+                : (inputVal / exchangeRate).toFixed(0);
+
             const renderSchedule = () => {
                 const currentData = itineraryData[selectedDay];
 
                 return (
                     <div className="pb-40 animate-fade-in">
+                        {/* Header */}
                         <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-4 pb-3 border-b border-stone-200/50">
                             <h1 className="text-center text-[17px] serif font-bold text-[#44403c] mb-3 tracking-[0.1em] flex items-center justify-center">
                                 <span className="mr-2 text-base opacity-60 grayscale">⛩️</span>
@@ -470,6 +478,7 @@
                             </div>
                         </div>
 
+                        {/* Weather Widget */}
                         <div className="px-5 mt-6 mb-2">
                             <div className="flex justify-between items-end mb-3 ml-1">
                                 <h2 className="text-[10px] font-bold text-[#a8a29e] uppercase tracking-widest">Live Forecast</h2>
@@ -491,6 +500,35 @@
                             </div>
                         </div>
 
+                        {/* Currency Converter */}
+                        <div className="px-5 mt-4 mb-6">
+                            <div className="bg-white rounded-xl border border-stone-100 p-4 shadow-sm">
+                                <div className="flex justify-between items-center text-xs text-[#a8a29e] mb-2 font-bold tracking-wider">
+                                    <span>CURRENCY</span>
+                                    <span>1 JPY ≈ {exchangeRate.toFixed(3)} TWD</span>
+                                </div>
+                                <div className="flex items-center justify-between space-x-2">
+                                    <div className="flex-1 bg-[#fdfcf8] rounded-lg p-2 border border-stone-200 flex flex-col">
+                                        <span className="text-[10px] text-[#a8a29e] font-bold mb-1">{direction ? 'JPY ¥' : 'TWD NT$'}</span>
+                                        <input 
+                                            type="number" 
+                                            value={inputVal}
+                                            onChange={(e) => setInputVal(e.target.value)}
+                                            className="bg-transparent text-lg font-mono font-bold text-[#57534e] outline-none w-full"
+                                        />
+                                    </div>
+                                    <button onClick={toggleDirection} className="p-2 rounded-full bg-[#f5f5f4] text-[#8f9eaf] active:scale-95 transition-transform">
+                                        <Icon name="refresh" size={16} />
+                                    </button>
+                                    <div className="flex-1 bg-[#fdfcf8] rounded-lg p-2 border border-stone-200 flex flex-col">
+                                        <span className="text-[10px] text-[#a8a29e] font-bold mb-1">{direction ? 'TWD NT$' : 'JPY ¥'}</span>
+                                        <div className="text-lg font-mono font-bold text-[#8f9eaf]">{calculatedVal}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Event List */}
                         <div className="px-5 mt-6 space-y-4 relative">
                              {currentData.events.map((event, index) => {
                                  const isLast = index === currentData.events.length - 1;
@@ -516,12 +554,6 @@
                                                         <span className={`text-[9px] font-bold text-white px-2 py-0.5 rounded-full ${theme.bg}`}>
                                                             {event.type.toUpperCase()}
                                                         </span>
-                                                        {event.hours && (
-                                                            <div className="flex items-center text-[10px] text-[#a8a29e] ml-2">
-                                                                <Icon name="clock" size={10} className="mr-1" />
-                                                                {event.hours}
-                                                            </div>
-                                                        )}
                                                     </div>
                                                     <h3 className="text-base font-bold text-[#57534e] serif leading-tight mb-1 truncate">
                                                         {event.title}
@@ -541,6 +573,7 @@
                              })}
                         </div>
 
+                        {/* Modal Popup */}
                         {selectedEvent && (
                             <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
                                 <div 
@@ -549,6 +582,7 @@
                                 ></div>
                                 
                                 <div className="modal-content modal-enter relative bg-white w-full sm:max-w-md h-[80vh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col">
+                                    
                                     <div className="p-6 pb-4 bg-white z-10 border-b border-stone-50">
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center space-x-2">
@@ -564,12 +598,15 @@
                                         <h2 className="text-2xl font-serif font-bold text-[#57534e] leading-tight mb-2">
                                             {selectedEvent.title}
                                         </h2>
+                                        
+                                        {/* Modal Only: Clock */}
                                         {selectedEvent.hours && (
                                             <div className="flex items-center text-xs text-[#8f9eaf] font-bold mb-3">
                                                 <Icon name="clock" size={14} className="mr-1.5" />
                                                 {selectedEvent.hours}
                                             </div>
                                         )}
+
                                         <div className="flex items-start text-xs text-stone-500 bg-[#fafaf9] p-3 rounded-lg">
                                             <Icon name="map" size={14} className="mr-2 mt-0.5 flex-shrink-0 text-[#a8a29e]" />
                                             <span className="leading-relaxed">{selectedEvent.address}</span>
