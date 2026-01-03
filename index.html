@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>2026 京阪旅 | Travel Mate</title>
+    <title>2026 京阪旅行 | Travel Mate</title>
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -16,46 +16,38 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #fdfcf8; /* 米白色底 */
+            background-color: #fdfcf8; /* 和紙白 */
             color: #374151;
             -webkit-tap-highlight-color: transparent;
             padding-bottom: env(safe-area-inset-bottom);
         }
         
-        h1, h2, h3, .serif { font-family: 'Noto Serif JP', serif; }
-
+        .serif { font-family: 'Noto Serif JP', serif; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* 氣象卡片：像一張高級紙卡 */
-        .weather-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        /* 行程卡片：極簡白卡 */
+        /* 卡片設計 */
         .event-card {
             background: #ffffff;
             border: 1px solid #f3f4f6;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        .event-card:active { transform: scale(0.98); background: #fafafa; }
-
-        /* 時間軸線條 */
-        .timeline-line {
+        .event-card:active { 
+            transform: scale(0.98); 
+            background: #fafafa;
+            border-color: #e5e7eb;
+        }
+        
+        /* 左側裝飾線 */
+        .card-accent {
             position: absolute;
-            left: 23px;
-            top: 36px;
-            bottom: -20px;
-            width: 1px;
-            background: #e5e7eb; /* 淺灰細線 */
-            z-index: 0;
-            border-left: 1px dashed #d1d5db; /* 虛線質感 */
-            background: transparent;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
         }
-        .last-item .timeline-line { display: none; }
     </style>
 </head>
 <body>
@@ -64,75 +56,65 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- 完整行程資料 (1/11-1/15) ---
+        // --- 行程資料 (已補全地址與導遊筆記) ---
         const itineraryData = {
             "Day 1": { 
-                date: "1/11", weekday: "Sun", area: "大阪梅田", temp: "6-10°C", condition: "Cloudy",
+                date: "1/11", weekday: "Sun", area: "大阪梅田", 
                 events: [ 
-                    { time: "14:55", type: "transport", title: "關西機場", desc: "抵達 & 入境審查", icon: "plane", nav: "Kansai International Airport" },
-                    { time: "17:00", type: "hotel", title: "Check-in: 京阪淀屋橋", desc: "放行李 | 訂好了！", icon: "hotel", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"] },
-                    { time: "17:20", type: "shop", title: "阪急百貨", desc: "梅田精華區", icon: "shopping-bag", nav: "Hankyu Umeda Main Store" },
-                    { time: "17:50", type: "food", title: "grenier Umeda", desc: "烤布蕾千層派", icon: "coffee", nav: "grenier Umeda", tags: ["必吃", "排隊"] },
-                    { time: "18:20", type: "shop", title: "LUCUA 1100", desc: "年輕時尚百貨", icon: "shopping-bag", nav: "LUCUA 1100" },
-                    { time: "19:10", type: "shop", title: "Links Umeda", desc: "友都八喜連通", icon: "shopping-bag", nav: "LINKS UMEDA" },
-                    { time: "20:00", type: "shop", title: "YODOBASHI", desc: "大型電器/扭蛋", icon: "gift", nav: "Yodobashi Umeda" },
-                    { time: "21:00", type: "food", title: "梅田宵夜連發", desc: "Hanadako章魚燒 / SAKURA大阪燒", icon: "utensils", nav: "Hanadako Osaka", tags: ["必吃"] },
-                    { time: "22:00", type: "shop", title: "Book Studio", desc: "書店逛逛", icon: "book", nav: "Book Studio Osaka" },
-                    { time: "22:30", type: "transport", title: "回飯店休息", desc: "養精蓄銳", icon: "moon" }
+                    { time: "14:55", type: "transport", title: "關西機場 (KIX)", address: "大阪府泉佐野市泉州空港北1", nav: "Kansai International Airport", notes: ["入境審查約 1hr", "填寫 VJW"] },
+                    { time: "17:00", type: "hotel", title: "Check-in: 京阪淀屋橋", address: "大阪市中央區北濱2-4-6", nav: "Hotel Keihan Yodoyabashi", tags: ["住宿"], notes: ["寄放行李", "領取網購包裹"] },
+                    { time: "17:20", type: "shop", title: "阪急百貨 梅田本店", address: "大阪市北區角田町8-7", nav: "Hankyu Umeda Main Store", tags: ["購物"], notes: ["B1 美食街必逛"] },
+                    { time: "17:50", type: "food", title: "grenier Umeda", address: "阪急 Grand Building 1F", nav: "grenier Umeda", tags: ["必吃", "排隊"], notes: ["推薦: 烤布蕾千層派 (ブリュレミルフィーユ)"] },
+                    { time: "18:20", type: "shop", title: "LUCUA 1100", address: "大阪市北區梅田3-1-3", nav: "LUCUA 1100", tags: ["購物"], notes: ["9F 蔦屋書店", "B1 美食街"] },
+                    { time: "20:00", type: "shop", title: "Yodobashi / Links", address: "大阪市北區大深町1-1", nav: "Yodobashi Umeda", tags: ["購物"], notes: ["扭蛋區在 B1/5F", "電器免稅 10%"] },
+                    { time: "21:00", type: "food", title: "Hanadako 章魚燒", address: "新梅田食道街 1F", nav: "Hanadako Osaka", tags: ["必吃", "排隊"], notes: ["必點: 蔥花美乃滋章魚燒 (ネギマヨ)"] },
+                    { time: "22:30", type: "transport", title: "返回飯店休息", address: "Hotel Keihan Yodoyabashi", nav: "Hotel Keihan Yodoyabashi", notes: ["養精蓄銳"] }
                 ] 
             },
             "Day 2": { 
-                date: "1/12", weekday: "Mon", area: "難波心齋橋", temp: "5-9°C", condition: "Sunny",
+                date: "1/12", weekday: "Mon", area: "難波心齋橋", 
                 events: [ 
-                    { time: "08:20", type: "sight", title: "難波八阪神社", desc: "巨大獅子頭祈福", icon: "camera", nav: "Namba Yasaka Shrine", tags: ["必拍"] },
-                    { time: "09:30", type: "food", title: "Galette au Beurre", desc: "高島屋 | 法式奶油餅乾", icon: "gift", nav: "Galette au Beurre Takashimaya Osaka", tags: ["伴手禮"] },
-                    { time: "10:00", type: "food", title: "黑門市場", desc: "早午餐吃海鮮", icon: "utensils", nav: "Kuromon Ichiba Market" },
-                    { time: "11:15", type: "sight", title: "固力果跑跑人", desc: "道頓堀地標", icon: "camera", nav: "Glico Man Sign" },
-                    { time: "11:30", type: "shop", title: "心齋橋筋商店街", desc: "藥妝、服飾", icon: "shopping-bag", nav: "Shinsaibashi-Suji" },
-                    { time: "13:00", type: "food", title: "牛かつもと村", desc: "炸牛排 (難波御堂筋店)", icon: "utensils", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["排隊名店"] },
-                    { time: "14:00", type: "food", title: "章魚燒道樂 Wanaka", desc: "道頓堀店", icon: "utensils", nav: "Takoyaki Wanaka Dotonbori" },
-                    { time: "14:15", type: "sight", title: "御津八幡宮", desc: "美國村守護神", icon: "map-pin", nav: "Mitsu Hachimangu" },
-                    { time: "14:45", type: "shop", title: "大丸心齋橋 / POP MART", desc: "本館 & PARCO", icon: "shopping-bag", nav: "Daimaru Shinsaibashi", tags: ["必逛"] },
-                    { time: "16:30", type: "shop", title: "美國村古著巡禮", desc: "Kinji / Kindal / どないや", icon: "shirt", nav: "Americamura", tags: ["古著"] },
-                    { time: "18:00", type: "shop", title: "相機的大林", desc: "Camera no Ohbayashi", icon: "camera", nav: "Camera no Ohbayashi" },
-                    { time: "18:40", type: "shop", title: "阪急三番街", desc: "梅田茶屋町店", icon: "shopping-bag", nav: "Hankyu Sanbangai" },
-                    { time: "20:10", type: "shop", title: "HEP FIVE", desc: "紅色摩天輪", icon: "shopping-bag", nav: "HEP FIVE" },
-                    { time: "21:00", type: "food", title: "燒肉力丸", desc: "梅田東通店 | 吃到飽", icon: "utensils", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦"] }
+                    { time: "08:20", type: "sight", title: "難波八阪神社", address: "大阪市浪速區元町2-9-19", nav: "Namba Yasaka Shrine", tags: ["必拍"], notes: ["巨大獅子殿祈求勝運", "成人之日人潮多"] },
+                    { time: "09:30", type: "food", title: "Galette au Beurre", address: "高島屋大阪店 B1F", nav: "Galette au Beurre Takashimaya Osaka", tags: ["伴手禮", "必買"], notes: ["推薦: 經典奶油厚餅乾", "鐵盒限定款"] },
+                    { time: "10:00", type: "food", title: "黑門市場", address: "大阪市中央區日本橋2-4-1", nav: "Kuromon Ichiba Market", tags: ["美食"], notes: ["必吃: 烤扇貝、海鮮串", "注意: 僅收現金店鋪多"] },
+                    { time: "11:15", type: "sight", title: "固力果跑跑人", address: "大阪市中央區道頓堀1", nav: "Glico Man Sign", tags: ["必拍"], notes: ["最佳拍攝點: 戎橋上"] },
+                    { time: "13:00", type: "food", title: "牛かつもと村", address: "大阪市中央區難波3-3-1", nav: "Gyukatsu Motomura Namba Midosuji", tags: ["必吃", "排隊"], notes: ["★ 炸牛排定食", "可追加小份肉"] },
+                    { time: "14:45", type: "shop", title: "大丸心齋橋 / PARCO", address: "大阪市中央區心齋橋筋1-7-1", nav: "Daimaru Shinsaibashi", tags: ["必逛"], notes: ["6F 動漫層: 吉卜力、寶可夢", "POP MART 在 PARCO"] },
+                    { time: "16:30", type: "shop", title: "美國村古著巡禮", address: "大阪市中央區西心齋橋", nav: "Americamura", tags: ["古著"], notes: ["Kinji / Kindal / どないや"] },
+                    { time: "21:00", type: "food", title: "燒肉力丸 梅田店", address: "大阪市北區小松原町4-32", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦"], notes: ["國產牛吃到飽", "牛舌必點"] }
                 ] 
             },
             "Day 3": { 
-                date: "1/13", weekday: "Tue", area: "大阪 -> 京都", temp: "4-8°C", condition: "Cloudy",
+                date: "1/13", weekday: "Tue", area: "大阪 -> 京都", 
                 events: [ 
-                    { time: "09:00", type: "sight", title: "大阪城", desc: "晨間散步", icon: "camera", nav: "Osaka Castle" },
-                    { time: "10:00", type: "hotel", title: "Check-in: Vista Premio", desc: "京都和邸 | 寄放行李", icon: "hotel", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"] },
-                    { time: "11:15", type: "food", title: "三嶋亭 (高島屋店)", desc: "百年壽喜燒老店", icon: "utensils", nav: "Mishima-tei Takashimaya Kyoto", tags: ["必吃"] },
-                    { time: "12:45", type: "sight", title: "嵐山半日遊", desc: "常寂光寺/竹林/野宮神社/天龍寺", icon: "map", nav: "Arashiyama Bamboo Grove", tags: ["必拍"] },
-                    { time: "17:00", type: "shop", title: "河原町購物", desc: "Pokemon / Marimekko / SOU・SOU", icon: "shopping-bag", nav: "Shijo Kawaramachi" },
-                    { time: "20:00", type: "shop", title: "Animate Kyoto", desc: "動漫周邊", icon: "gift", nav: "Animate Kyoto" },
-                    { time: "21:00", type: "food", title: "一蘭拉麵", desc: "京都河原町店", icon: "utensils", nav: "Ichiran Kyoto Kawaramachi" }
+                    { time: "09:00", type: "sight", title: "大阪城公園", address: "大阪市中央區大阪城", nav: "Osaka Castle", tags: ["散步"], notes: ["天守閣拍照"] },
+                    { time: "10:00", type: "hotel", title: "前往京都 Check-in", address: "京都市中京區六角通新町西入", nav: "Hotel Vista Premio Kyoto Nagomitei", tags: ["住宿"], notes: ["Vista Premio 和邸", "先寄放行李"] },
+                    { time: "11:15", type: "food", title: "三嶋亭 (高島屋店)", address: "京都高島屋 7F", nav: "Mishima-tei Takashimaya Kyoto", tags: ["必吃", "高級"], notes: ["百年壽喜燒老店", "午間套餐CP值高"] },
+                    { time: "12:45", type: "sight", title: "嵐山半日遊", address: "京都市右京區嵐山", nav: "Arashiyama Bamboo Grove", tags: ["必拍"], notes: ["竹林小徑 -> 野宮神社 -> 渡月橋", "ARABICA 咖啡"] },
+                    { time: "17:00", type: "shop", title: "河原町購物商圈", address: "京都市下京區四條通河原町", nav: "Shijo Kawaramachi", tags: ["購物"], notes: ["Pokemon Center Kyoto", "SOU・SOU 本店"] },
+                    { time: "21:00", type: "food", title: "一蘭拉麵", address: "京都市中京區蛸藥師通", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"], notes: ["京都限定口味?", "加麵 (替玉)"] }
                 ] 
             },
             "Day 4": { 
-                date: "1/14", weekday: "Wed", area: "京都深度遊", temp: "7°C", condition: "Partly Cloudy",
+                date: "1/14", weekday: "Wed", area: "京都深度遊", 
                 events: [ 
-                    { time: "07:30", type: "sight", title: "清水寺", desc: "早起避開人潮", icon: "camera", nav: "Kiyomizu-dera", tags: ["必去"] },
-                    { time: "09:30", type: "shop", title: "清水坂/產寧坂", desc: "MALEBRANCHE / 七味家 / 烏丸六七堂", icon: "shopping-bag", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"] },
-                    { time: "11:30", type: "sight", title: "八阪庚申堂 & 八阪神社", desc: "色彩繽紛結緣猴", icon: "camera", nav: "Yasaka Koshin-do" },
-                    { time: "12:30", type: "food", title: "祇園 鰻 川藤", desc: "午餐：鰻魚飯", icon: "utensils", nav: "Gion Unagi Kawatō" },
-                    { time: "13:30", type: "shop", title: "Miffy's Kitchen", desc: "米飛兔麵包 & 白川散步", icon: "rabbit", nav: "Miffy's Kitchen Gion" },
-                    { time: "14:30", type: "sight", title: "下鴨神社", desc: "森林中的神社", icon: "tree", nav: "Shimogamo Shrine" },
-                    { time: "16:30", type: "shop", title: "河原町雜貨巡禮", desc: "HUMAN MADE / ANGERS / MoMA", icon: "shopping-bag", nav: "Angers Kawaramachi", tags: ["必逛"] },
-                    { time: "20:00", type: "food", title: "六角ace", desc: "人氣居酒屋", icon: "utensils", nav: "Rokkaku Ace", tags: ["推薦"] }
+                    { time: "07:30", type: "sight", title: "清水寺", address: "京都市東山區清水1-294", nav: "Kiyomizu-dera", tags: ["必去"], notes: ["早起避開人潮", "清水舞台", "音羽之瀧"] },
+                    { time: "09:30", type: "shop", title: "清水坂 / 產寧坂", address: "京都市東山區清水", nav: "Malebranche Kiyomizuzaka", tags: ["伴手禮"], notes: ["必買: 茶之菓 (Malebranche)", "七味家本舖"] },
+                    { time: "12:30", type: "food", title: "祇園 鰻 川藤", address: "京都市東山區祇園町", nav: "Gion Unagi Kawatō", tags: ["午餐"], notes: ["鰻魚飯三吃"] },
+                    { time: "13:30", type: "shop", title: "Miffy's Kitchen", address: "京都市東山區祇園町", nav: "Miffy's Kitchen Gion", tags: ["可愛"], notes: ["米飛兔造型麵包", "祇園白川散步"] },
+                    { time: "14:30", type: "sight", title: "下鴨神社", address: "京都市左京區下鴨泉川町59", nav: "Shimogamo Shrine", tags: ["景點"], notes: ["糺之森", "河合神社(美人祈願)"] },
+                    { time: "16:30", type: "shop", title: "河原町 雜貨巡禮", address: "京都市中京區河原町通三條", nav: "Angers Kawaramachi", tags: ["必逛"], notes: ["Angers (文具)", "MoMA Design Store", "Today's Special"] },
+                    { time: "20:00", type: "food", title: "六角ace", address: "京都市中京區", nav: "Rokkaku Ace", tags: ["推薦"], notes: ["人氣創意居酒屋", "需預約"] }
                 ] 
             },
             "Day 5": { 
-                date: "1/15", weekday: "Thu", area: "返程", temp: "8°C", condition: "Sunny",
+                date: "1/15", weekday: "Thu", area: "返程", 
                 events: [ 
-                    { time: "07:00", type: "sight", title: "伏見稻荷大社", desc: "千本鳥居 | 早晨人少", icon: "camera", nav: "Fushimi Inari Taisha", tags: ["必拍"] },
-                    { time: "10:00", type: "sight", title: "御金神社", desc: "洗錢求財運", icon: "dollar-sign", nav: "Mikane Shrine" },
-                    { time: "11:00", type: "food", title: "麵屋優光", desc: "貝類高湯拉麵", icon: "utensils", nav: "Menya Yukou", tags: ["排隊"] },
-                    { time: "12:00", type: "transport", title: "利木津巴士", desc: "前往關西機場", icon: "bus", nav: "Kyoto Station Hachijoguchi Bus Stop" },
-                    { time: "16:15", type: "transport", title: "航班起飛", desc: "Goodbye Japan!", icon: "plane" }
+                    { time: "07:00", type: "sight", title: "伏見稻荷大社", address: "京都市伏見區深草藪之內町68", nav: "Fushimi Inari Taisha", tags: ["必拍"], notes: ["千本鳥居", "早晨光線最美"] },
+                    { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京區押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], notes: ["洗錢弁財天", "金色鳥居"] },
+                    { time: "11:00", type: "food", title: "麵屋優光", address: "京都市中京區場之町588", nav: "Menya Yukou", tags: ["必吃"], notes: ["貝類高湯拉麵", "叉燒美味"] },
+                    { time: "12:00", type: "transport", title: "利木津巴士", address: "京都車站八條口", nav: "Kyoto Station Hachijoguchi Bus Stop", notes: ["前往關西機場"] },
+                    { time: "16:15", type: "transport", title: "航班起飛", address: "KIX T1", nav: "Kansai International Airport", notes: ["Goodbye Japan!"] }
                 ] 
             }
         };
@@ -142,7 +124,7 @@
             { name: "ホテルビスタプレミオ京都 和邸", date: "1/13-1/15", address: "京都市中京區六角通新町西入", tel: "075-252-1666", nav: "Hotel Vista Premio Kyoto Nagomitei" }
         ];
 
-        // --- Components ---
+        // --- Helper Components ---
         const Icon = ({ name, size = 18, className }) => {
             if (name === 'plane') return <i data-lucide="plane" className={className}></i>;
             if (name === 'hotel') return <i data-lucide="bed-double" className={className}></i>;
@@ -160,9 +142,6 @@
             if (name === 'tree') return <i data-lucide="trees" className={className}></i>;
             if (name === 'dollar-sign') return <i data-lucide="banknote" className={className}></i>;
             if (name === 'bus') return <i data-lucide="bus" className={className}></i>;
-            if (name === 'sun') return <i data-lucide="sun" className={className}></i>;
-            if (name === 'cloud') return <i data-lucide="cloud" className={className}></i>;
-            if (name === 'cloud-sun') return <i data-lucide="cloud-sun" className={className}></i>;
             return <i data-lucide="circle" className={className}></i>;
         };
 
@@ -173,32 +152,24 @@
             useEffect(() => { lucide.createIcons(); }, [selectedDay, activeTab]);
 
             const handleNav = (loc) => {
-                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}&travelmode=driving`, '_blank');
+                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}`, '_blank');
             };
 
             const Tag = ({ text }) => {
-                let color = "bg-gray-100 text-gray-500 border-gray-200";
-                if (["必吃", "必買", "必去", "必拍", "住宿"].includes(text)) color = "bg-rose-50 text-rose-700 border-rose-100";
-                if (["排隊", "預約", "排隊名店"].includes(text)) color = "bg-amber-50 text-amber-700 border-amber-100";
-                if (["伴手禮", "古著", "推薦"].includes(text)) color = "bg-emerald-50 text-emerald-700 border-emerald-100";
-                
-                return (
-                    <span className={`text-[10px] px-2 py-0.5 rounded mr-1 border ${color}`}>
-                        {text}
-                    </span>
-                );
+                let bg = "bg-gray-100 text-gray-600";
+                if (["必吃", "必買", "必去", "必拍", "住宿"].includes(text)) bg = "bg-rose-100 text-rose-700";
+                if (["排隊", "預約", "排隊名店"].includes(text)) bg = "bg-amber-100 text-amber-800";
+                if (["伴手禮", "古著", "推薦", "購物"].includes(text)) bg = "bg-emerald-100 text-emerald-800";
+                return <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${bg}`}>{text}</span>;
             };
 
             const renderSchedule = () => {
                 const currentData = itineraryData[selectedDay];
-                let weatherIcon = "cloud";
-                if (currentData.condition === "Sunny") weatherIcon = "sun";
-                if (currentData.condition === "Partly Cloudy") weatherIcon = "cloud-sun";
-
                 return (
                     <div className="pb-24 animate-fade-in">
-                        {/* 1. Header (Date) */}
-                        <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-4 pb-2 border-b border-gray-100">
+                        {/* 1. Header */}
+                        <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-4 pb-2 border-b border-gray-100 shadow-sm">
+                            <h1 className="text-center text-xl font-serif font-bold text-gray-800 mb-3 tracking-widest">2026 京阪旅行</h1>
                             <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 pb-2">
                                 {Object.keys(itineraryData).map(day => (
                                     <button 
@@ -206,86 +177,72 @@
                                         onClick={() => setSelectedDay(day)}
                                         className={`flex-shrink-0 px-4 py-2 rounded-full transition-all duration-300 flex flex-col items-center min-w-[64px] ${
                                             selectedDay === day 
-                                            ? 'bg-gray-800 text-white shadow-md transform scale-105' 
-                                            : 'bg-white text-gray-400 border border-gray-100'
+                                            ? 'bg-gray-800 text-white shadow-lg transform scale-105' 
+                                            : 'bg-white text-gray-400 border border-gray-200'
                                         }`}
                                     >
-                                        <span className="text-[10px] uppercase font-medium tracking-wider">{itineraryData[day].weekday}</span>
+                                        <span className="text-[10px] uppercase font-bold tracking-wider">{itineraryData[day].weekday}</span>
                                         <span className="text-lg font-serif leading-none mt-1">{itineraryData[day].date.split('/')[1]}</span>
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-                        {/* 2. Middle: Weather Widget (Minimalist) */}
-                        <div className="px-5 mt-6 mb-4">
-                            <div className="weather-card rounded-xl p-6 flex items-center justify-between relative overflow-hidden">
-                                <div>
-                                    <div className="flex items-center space-x-2 text-gray-400 text-xs font-medium uppercase tracking-widest mb-2">
-                                        <Icon name="map-pin" size={12} />
-                                        <span>{currentData.area}</span>
-                                    </div>
-                                    <div className="text-4xl font-serif text-gray-800 tracking-tight">{currentData.temp}</div>
-                                    <div className="text-gray-500 text-sm mt-1">{currentData.condition}</div>
-                                </div>
-                                <div className="text-gray-300">
-                                    <Icon name={weatherIcon} size={56} strokeWidth={1} />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 3. Bottom: Itinerary List */}
-                        <div className="px-5 mt-8 space-y-6 relative">
+                        {/* 2. Events List */}
+                        <div className="px-4 mt-6 space-y-4">
                              {currentData.events.map((event, index) => {
-                                 const isLast = index === currentData.events.length - 1;
+                                 // Determine accent color based on type
+                                 let accentColor = "bg-gray-400";
+                                 if (event.type === 'food') accentColor = "bg-orange-400";
+                                 if (event.type === 'shop') accentColor = "bg-rose-400";
+                                 if (event.type === 'transport') accentColor = "bg-blue-400";
+                                 if (event.type === 'hotel') accentColor = "bg-purple-500";
+                                 if (event.type === 'sight') accentColor = "bg-emerald-500";
+
                                  return (
-                                    <div key={index} className={`relative pl-12 ${isLast ? 'last-item' : ''}`}>
-                                        {/* Timeline Line (Dashed) */}
-                                        <div className="timeline-line"></div>
+                                    <div 
+                                        key={index} 
+                                        className="event-card rounded-xl p-4 cursor-pointer"
+                                        onClick={() => handleNav(event.nav)}
+                                    >
+                                        <div className={`card-accent ${accentColor}`}></div>
                                         
-                                        {/* Time Bubble */}
-                                        <div className="absolute left-0 top-1 flex flex-col items-center z-10">
-                                            <div className="text-[10px] font-bold text-gray-400 font-mono mb-1 tracking-tighter">
-                                                {event.time}
+                                        {/* Top Row: Category & Time */}
+                                        <div className="flex justify-between items-start mb-2 pl-3">
+                                            <div className="flex items-center space-x-2">
+                                                <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-full ${accentColor}`}>
+                                                    {event.type.toUpperCase()}
+                                                </span>
+                                                <span className="text-sm font-mono font-medium text-gray-400">{event.time}</span>
                                             </div>
-                                            {/* Icon Dot */}
-                                            <div className={`w-3 h-3 rounded-full border-2 bg-white ${
-                                                event.type === 'food' ? 'border-orange-400' :
-                                                event.type === 'shop' ? 'border-pink-400' :
-                                                event.type === 'transport' ? 'border-blue-400' :
-                                                event.type === 'hotel' ? 'border-purple-400' :
-                                                'border-emerald-400'
-                                            }`}></div>
+                                            <Icon name={event.icon} size={16} className="text-gray-400" />
                                         </div>
 
-                                        {/* Card */}
-                                        <div className="event-card rounded-lg p-4 mb-2">
-                                            <div className="flex justify-between items-start">
-                                                <div className="flex-1 pr-2">
-                                                    <div className="flex items-center space-x-2 mb-1">
-                                                        <Icon name={event.icon} size={14} className="text-gray-400" />
-                                                        <h3 className="text-base font-bold text-gray-800 serif leading-tight">{event.title}</h3>
-                                                    </div>
-                                                    <p className="text-xs text-gray-500 mb-2 leading-relaxed pl-6 border-l-2 border-gray-50">{event.desc}</p>
-                                                    
-                                                    {/* Tags */}
-                                                    {event.tags && (
-                                                        <div className="pl-6 flex flex-wrap gap-y-2">
-                                                            {event.tags.map((tag, i) => <Tag key={i} text={tag} />)}
-                                                        </div>
-                                                    )}
+                                        {/* Row 2: Title */}
+                                        <h3 className="text-lg font-bold text-gray-800 serif mb-1 pl-3 pr-8 leading-tight">
+                                            {event.title}
+                                        </h3>
+
+                                        {/* Row 3: Address */}
+                                        <div className="flex items-center text-xs text-gray-500 mb-3 pl-3">
+                                            <Icon name="map-pin" size={12} className="mr-1 flex-shrink-0" />
+                                            <span className="truncate">{event.address}</span>
+                                        </div>
+
+                                        {/* Row 4: Guide Notes & Tags */}
+                                        <div className="pl-3 pt-2 border-t border-dashed border-gray-100">
+                                            {event.notes && (
+                                                <ul className="text-xs text-gray-600 mb-2 space-y-1 list-disc list-inside marker:text-gray-300">
+                                                    {event.notes.map((note, i) => (
+                                                        <li key={i}>{note}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                            {event.tags && (
+                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                    {event.tags.map((tag, i) => <Tag key={i} text={tag} />)}
                                                 </div>
-                                                
-                                                {/* Nav Button (Minimal) */}
-                                                {event.nav && (
-                                                    <button 
-                                                        onClick={(e) => { e.stopPropagation(); handleNav(event.nav); }}
-                                                        className="flex-shrink-0 w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 border border-gray-100 active:bg-gray-100 active:text-gray-600 transition-colors"
-                                                    >
-                                                        <i data-lucide="navigation" className="w-4 h-4"></i>
-                                                    </button>
-                                                )}
-                                            </div>
+                                            )}
                                         </div>
                                     </div>
                                  );
@@ -298,37 +255,32 @@
             const renderInfo = () => (
                 <div className="px-5 py-8 pb-24 animate-fade-in">
                     <h2 className="text-xl font-serif font-bold text-gray-800 mb-6 border-b pb-2 border-gray-200">旅程資訊</h2>
-                    
-                    {/* Hotel Cards */}
-                    <div className="space-y-4 mb-8">
-                        {hotelInfos.map((hotel, i) => (
-                            <div key={i} className="event-card p-5 rounded-lg border-l-2 border-gray-800">
-                                <div className="flex justify-between items-start mb-2">
-                                    <div>
-                                        <h3 className="serif font-bold text-base text-gray-800">{hotel.name}</h3>
-                                        <p className="text-xs text-gray-400 mt-1 font-mono">{hotel.date}</p>
-                                    </div>
-                                    <button onClick={() => handleNav(hotel.nav)} className="bg-gray-100 p-2 rounded-full text-gray-500">
-                                        <i data-lucide="map" className="w-4 h-4"></i>
-                                    </button>
+                    {hotelInfos.map((hotel, i) => (
+                        <div key={i} className="event-card p-5 rounded-xl mb-4" onClick={() => handleNav(hotel.nav)}>
+                            <div className={`card-accent bg-gray-800`}></div>
+                            <div className="pl-3">
+                                <h3 className="serif font-bold text-base text-gray-800">{hotel.name}</h3>
+                                <p className="text-xs text-gray-400 mt-1 font-mono mb-2">{hotel.date}</p>
+                                <div className="text-xs text-gray-500 flex items-start">
+                                    <Icon name="map-pin" size={12} className="mr-1 mt-0.5" />
+                                    {hotel.address}
                                 </div>
-                                <p className="text-xs text-gray-500 mb-1">{hotel.address}</p>
-                                <p className="text-xs text-gray-400">Tel: {hotel.tel}</p>
                             </div>
-                        ))}
-                    </div>
-
-                    {/* Tools */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="event-card p-4 rounded-lg flex flex-col items-center justify-center py-6">
-                            <i data-lucide="phone-call" className="w-6 h-6 text-rose-400 mb-2"></i>
-                            <span className="text-gray-700 font-bold text-sm">110 / 119</span>
-                            <span className="text-[10px] text-gray-400 mt-1">緊急電話</span>
                         </div>
-                        <div className="event-card p-4 rounded-lg flex flex-col items-center justify-center py-6">
-                            <i data-lucide="train" className="w-6 h-6 text-emerald-500 mb-2"></i>
-                            <span className="text-gray-700 font-bold text-sm">換乘案內</span>
-                            <span className="text-[10px] text-gray-400 mt-1">交通查詢</span>
+                    ))}
+                    
+                    <div className="grid grid-cols-2 gap-4 mt-6">
+                         <div className="bg-rose-50 p-4 rounded-xl flex flex-col items-center justify-center border border-rose-100">
+                            <i data-lucide="phone-call" className="w-6 h-6 text-rose-400 mb-2"></i>
+                            <span className="text-rose-800 font-bold text-sm">110 / 119</span>
+                            <span className="text-[10px] text-rose-400 mt-1">緊急電話</span>
+                        </div>
+                        <div className="bg-emerald-50 p-4 rounded-xl flex flex-col items-center justify-center border border-emerald-100">
+                             <a href="https://transit.yahoo.co.jp/" target="_blank" className="flex flex-col items-center">
+                                <i data-lucide="train" className="w-6 h-6 text-emerald-500 mb-2"></i>
+                                <span className="text-emerald-800 font-bold text-sm">換乘案內</span>
+                                <span className="text-[10px] text-emerald-400 mt-1">交通查詢</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -338,7 +290,7 @@
                 <div className="min-h-screen">
                     {activeTab === 'schedule' ? renderSchedule() : renderInfo()}
 
-                    {/* Bottom Nav (Minimal floating bar) */}
+                    {/* Bottom Nav */}
                     <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-md border border-gray-200 rounded-full px-8 py-3 flex items-center shadow-xl shadow-gray-200/50 z-50 space-x-8">
                         <button 
                             onClick={() => setActiveTab('schedule')}
