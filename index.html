@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>2026 京阪旅行 | Travel Guide</title>
     
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png?v=2">
+    <link rel="apple-touch-icon" href="icon.png?v=2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
@@ -461,26 +461,31 @@
 
                 return (
                     <div className="pb-40 animate-fade-in">
-                        <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-8 pb-4 border-b border-stone-200/50">
-                            <h1 className="text-center text-[17px] serif font-bold text-[#44403c] mb-4 tracking-[0.1em] flex items-center justify-center">
-                                <span className="mr-2 text-base opacity-60 grayscale">⛩️</span>
-                                2026 京阪旅行
-                            </h1>
-                            <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 pb-1">
-                                {Object.keys(itineraryData).map(day => (
-                                    <button 
-                                        key={day}
-                                        onClick={() => setSelectedDay(day)}
-                                        className={`flex-shrink-0 px-4 py-2 rounded-full transition-all duration-300 flex flex-col items-center min-w-[64px] ${
-                                            selectedDay === day 
-                                            ? 'bg-[#8f9eaf] text-white shadow-md transform scale-105' 
-                                            : 'bg-white text-[#a8a29e] border border-stone-100'
-                                        }`}
-                                    >
-                                        <span className="text-[10px] uppercase font-bold tracking-wider">{itineraryData[day].weekday}</span>
-                                        <span className="text-lg font-serif leading-none mt-1">{itineraryData[day].date.split('/')[1]}</span>
-                                    </button>
-                                ))}
+                        <div
+                            className="sticky top-0 z-30 bg-[#fdfcf8]/95 backdrop-blur-md border-b border-stone-200/50 pb-2 transition-all duration-300"
+                            style={{ paddingTop: 'max(1.5rem, env(safe-area-inset-top))' }}
+                        >
+                            <div className="pt-3">
+                                <h1 className="text-center text-[17px] serif font-bold text-[#57534e] mb-6 tracking-[0.1em] flex items-center justify-center">
+                                    <span className="mr-2 text-base opacity-60 grayscale">⛩️</span>
+                                    2026 京阪旅行
+                                </h1>
+                                <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 pb-1">
+                                    {Object.keys(itineraryData).map(day => (
+                                        <button 
+                                            key={day}
+                                            onClick={() => setSelectedDay(day)}
+                                            className={`flex-shrink-0 px-4 py-2 rounded-full transition-all duration-300 flex flex-col items-center min-w-[64px] ${
+                                                selectedDay === day 
+                                                ? 'bg-[#8f9eaf] text-white shadow-md transform scale-105' 
+                                                : 'bg-white text-[#a8a29e] border border-stone-100'
+                                            }`}
+                                        >
+                                            <span className="text-[10px] uppercase font-bold tracking-wider">{itineraryData[day].weekday}</span>
+                                            <span className="text-lg font-serif leading-none mt-1">{itineraryData[day].date.split('/')[1]}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -605,7 +610,6 @@
                                             {selectedEvent.title}
                                         </h2>
                                         
-                                        {/* Modal Only: Clock with Icon (Smaller) */}
                                         {selectedEvent.hours && (
                                             <div className="flex items-center text-xs text-[#8f9eaf] font-bold mb-3">
                                                 <Icon name="clock" size={11} className="mr-1.5" />
