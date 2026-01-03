@@ -135,7 +135,7 @@
         // --- 行李清單資料 ---
         const packingList = {
             "重要證件": ["護照", "身分證", "電子簽證/紙本簽證", "登機證/機票證明", "保險卡", "信用卡", "日幣現金", "台幣千元鈔(備用)", "駕照/譯本", "交通卡/周遊券"],
-            "3C 產品": ["手機", "耳機", "SIM卡/eSIM", "充電器(各類)", "相機", "萬國插頭", "記憶卡/備用電池", "自拍棒/腳架(管徑<1cm)", "行動電源(隨身攜帶)"],
+            "3C 產品": ["手機", "耳機", "SIM卡/eSIM", "充電器(各類)", "相機", "萬國插頭", "記憶卡/備用電池", "自拍棒/腳架(管徑<1cm)", "行動電源(不可超過2個)"],
             "生活用品": ["盥洗用品(分裝)", "牙刷/牙線", "常備藥品", "衛生紙/濕紙巾", "保養品", "隱形眼鏡/藥水", "折疊雨傘", "生理用品", "吹風機/離子夾", "刮鬍刀"],
             "衣物": ["上衣", "下身", "內衣褲", "睡衣", "發熱衣/褲", "襪子", "外套", "帽子", "飾品", "好走的鞋"],
             "其他": ["口罩", "太陽眼鏡", "拖鞋", "隨身小包", "購物袋"]
@@ -147,7 +147,7 @@
             { title: "絕對禁止 (Forbidden)", icon: "ban", items: ["鉛酸電池", "易燃液體", "漂白水", "殺蟲劑"] }
         ];
 
-        // --- 完整行程資料 (Day 1 Note Updated) ---
+        // --- 完整行程資料 ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
@@ -608,6 +608,11 @@
                                             className="event-card p-4 cursor-pointer"
                                             onClick={() => setSelectedEvent({...event, theme})}
                                         >
+                                            {event.booking && (
+                                                <div className="absolute top-0 right-0 bg-[#d6bd8d] text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-lg z-10">
+                                                    予約済
+                                                </div>
+                                            )}
                                             <div className="flex justify-between items-center">
                                                 <div className="flex-1 pr-4 min-w-0">
                                                     <div className="flex items-center space-x-2 mb-1">
@@ -810,8 +815,8 @@
                                 <div className="pl-1">
                                     <h3 className="serif font-bold text-base text-[#57534e]">{hotel.name}</h3>
                                     <p className="text-xs text-[#a8a29e] mt-1 font-mono mb-2">{hotel.date}</p>
-                                    <div className="text-xs text-stone-500 flex items-start">
-                                        <Icon name="map" size={12} className="mr-1 mt-0.5" />
+                                    <div className="text-xs text-stone-500 flex items-center">
+                                        <Icon name="map" size={12} className="mr-1 flex-shrink-0" />
                                         {hotel.address}
                                     </div>
                                 </div>
@@ -897,9 +902,9 @@
                                 </div>
                                 <div className="p-4 grid grid-cols-2 gap-3">
                                     {items.map((item, idx) => (
-                                        <label key={idx} className="flex items-center cursor-pointer group">
-                                            <input type="checkbox" className="custom-checkbox flex-shrink-0" />
-                                            <span className="text-sm text-[#57534e] group-hover:text-[#9cad95] transition-colors">{item}</span>
+                                        <label key={idx} className="flex items-start cursor-pointer group">
+                                            <input type="checkbox" className="custom-checkbox flex-shrink-0 mt-[3px]" />
+                                            <span className="text-sm text-[#57534e] group-hover:text-[#9cad95] transition-colors leading-tight">{item}</span>
                                         </label>
                                     ))}
                                 </div>
