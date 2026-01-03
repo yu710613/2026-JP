@@ -100,7 +100,7 @@
             default: { bg: "bg-stone-400", text: "text-stone-400", border: "border-stone-400" }
         };
 
-        // --- 完整行程資料 (Day 2/Day 4 Booking Info Added) ---
+        // --- 完整行程資料 ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", lat: 34.7025, lon: 135.4959,
@@ -229,7 +229,8 @@
                         time: "21:15", type: "food", title: "焼肉力丸 梅田東通り店", address: "大阪府大阪市北区小松原町4-32 北大阪東通りビル 3F", nav: "Yakiniku Rikimaru Umeda Higashi", tags: ["推薦", "吃到飽"], hours: "16:00-23:00",
                         guide: ["必點：厚切牛舌、橫膈膜。", "特色：CP值極高的國產牛吃到飽。"],
                         booking: { name: "CHEN HSUAN YU", time: "21:15" }
-                    }
+                    },
+                    { time: "23:00", type: "hotel", title: "ホテル京阪淀屋橋", address: "大阪府大阪市中央区北浜2-4-6", nav: "Hotel Keihan Yodoyabashi", hours: "24H", guide: ["養精蓄銳。"] }
                 ] 
             },
             "Day 3": { 
@@ -268,7 +269,8 @@
                     { time: "19:00", type: "shop", title: "京都高島屋百貨", address: "京都市下京区四条通河原町西入真町52", nav: "Kyoto Takashimaya", tags: ["購物"], hours: "10:00-20:00", guide: ["美食：B1 地下街美食豐富。", "品牌：國際精品與化妝品齊全。"] },
                     { time: "19:30", type: "sight", title: "錦天滿宮", address: "京都市中京区新京極通り四条上る中之町537", nav: "Nishiki Tenmangu", tags: ["祈福"], hours: "08:00-20:00", guide: ["特色：位於錦市場盡頭，鳥居嵌入建築物中。", "祈求：學問之神，求智慧。"] },
                     { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", hours: "10:00-20:00", guide: ["動漫迷聖地。"] },
-                    { time: "21:00", type: "food", title: "一蘭拉麵", address: "京都市中京区蛸薬師通新京極東入裏寺町598", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"], hours: "10:00-06:00", guide: ["口味：完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"] }
+                    { time: "21:00", type: "food", title: "一蘭拉麵", address: "京都市中京区蛸薬師通新京極東入裏寺町598", nav: "Ichiran Kyoto Kawaramachi", tags: ["宵夜"], hours: "10:00-06:00", guide: ["口味：完全客製化口味。", "推薦加點：半熟鹽味蛋、抹茶杏仁豆腐 (京都限定)。"] },
+                    { time: "22:00", type: "hotel", title: "ホテルビスタプレミオ京都 和邸", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", hours: "24H", guide: ["整理戰利品。"] }
                 ] 
             },
             "Day 4": { 
@@ -290,7 +292,8 @@
                         about: { title: "交通指引", content: "步行8分鐘至KH京阪本線「三條站」往出町柳方向至「出町柳站」下車。" }
                     },
                     { time: "16:30", type: "shop", title: "河原町雜貨巡禮", address: "京都市中京区河原町三条上ル西側", nav: "Angers Kawaramachi", tags: ["必逛"], hours: "11:00-20:00", guide: ["必喝：HUMAN MADE 1928 咖啡 by 藍瓶咖啡。", "必逛雜貨：ANGERS 河原町本店、MoMA Design Store 京都、TODAY'S SPECIAL、Madu。", "特色店鋪：ペアキーホルダー専門店 2/8b (鑰匙圈)、mumokuteki goods & wears。", "商圈：新京極商店街、錦市場、唐吉訶德。"] },
-                    { time: "20:00", type: "food", title: "六角ace", address: "京都市中京区大阪材木町696-4", nav: "Rokkaku Ace", tags: ["推薦", "需預約"], hours: "17:00-23:00", guide: ["人氣創意居酒屋，氣氛熱鬧。", "必點：水果沙瓦、特色關東煮。"] }
+                    { time: "20:00", type: "food", title: "六角ace", address: "京都市中京区大阪材木町696-4", nav: "Rokkaku Ace", tags: ["推薦", "需預約"], hours: "17:00-23:00", guide: ["人氣創意居酒屋，氣氛熱鬧。", "必點：水果沙瓦、特色關東煮。"] },
+                    { time: "21:30", type: "hotel", title: "ホテルビスタプレミオ京都 和邸", address: "京都市中京区六角通新町西入西六角町457", nav: "Hotel Vista Premio Kyoto Nagomitei", hours: "24H", guide: ["最後一晚整理行李。"] }
                 ] 
             },
             "Day 5": { 
@@ -383,15 +386,20 @@
             const [selectedDay, setSelectedDay] = useState("Day 1");
             const [activeTab, setActiveTab] = useState("schedule");
             const [selectedEvent, setSelectedEvent] = useState(null);
+            
+            // Weather
             const [currentTemp, setCurrentTemp] = useState("--");
             const [currentCondition, setCurrentCondition] = useState("Loading...");
             const [hourlyForecast, setHourlyForecast] = useState([]);
+
+            // Currency
             const [exchangeRate, setExchangeRate] = useState(0.215);
             const [inputVal, setInputVal] = useState(1000);
             const [direction, setDirection] = useState(true);
 
             useEffect(() => { lucide.createIcons(); }, [selectedDay, activeTab, selectedEvent, hourlyForecast]);
 
+            // Weather & Currency Fetch
             useEffect(() => {
                 const fetchData = async () => {
                     const { lat, lon } = itineraryData[selectedDay];
@@ -453,6 +461,7 @@
 
                 return (
                     <div className="pb-40 animate-fade-in">
+                        {/* Header */}
                         <div className="sticky top-0 z-20 bg-[#fdfcf8]/95 backdrop-blur-sm pt-6 pb-4 border-b border-stone-200/50">
                             <h1 className="text-center text-[17px] serif font-bold text-[#44403c] mb-5 tracking-[0.1em] flex items-center justify-center">
                                 <span className="mr-2 text-base opacity-60 grayscale">⛩️</span>
@@ -476,6 +485,7 @@
                             </div>
                         </div>
 
+                        {/* Weather Widget (Live) */}
                         <div className="px-5 mt-6 mb-2">
                             <div className="flex justify-between items-end mb-3 ml-1">
                                 <h2 className="text-[10px] font-bold text-[#a8a29e] uppercase tracking-widest">Live Forecast</h2>
@@ -497,6 +507,7 @@
                             </div>
                         </div>
 
+                        {/* Currency Converter */}
                         <div className="px-5 mt-4 mb-6">
                             <div className="bg-white rounded-xl border border-stone-100 p-4 shadow-sm">
                                 <div className="flex justify-between items-center text-xs text-[#a8a29e] mb-2 font-bold tracking-wider">
@@ -524,6 +535,7 @@
                             </div>
                         </div>
 
+                        {/* Event List */}
                         <div className="px-5 mt-6 space-y-4 relative">
                              {currentData.events.map((event, index) => {
                                  const isLast = index === currentData.events.length - 1;
@@ -549,17 +561,12 @@
                                                         <span className={`text-[9px] font-bold text-white px-2 py-0.5 rounded-full ${theme.bg}`}>
                                                             {event.type.toUpperCase()}
                                                         </span>
-                                                        {event.hours && (
-                                                            <span className="text-[10px] text-[#a8a29e] ml-2">
-                                                                {event.hours}
-                                                            </span>
-                                                        )}
                                                     </div>
                                                     <h3 className="text-base font-bold text-[#57534e] serif leading-tight mb-1 truncate">
                                                         {event.title}
                                                     </h3>
                                                     <div className="flex items-center text-xs text-[#a8a29e] mt-1">
-                                                        <Icon name="map" size={12} className="mr-1 flex-shrink-0" />
+                                                        <Icon name="map" size={10} className="mr-1 flex-shrink-0" />
                                                         <span className="truncate">{event.address}</span>
                                                     </div>
                                                 </div>
@@ -573,6 +580,7 @@
                              })}
                         </div>
 
+                        {/* Modal Popup */}
                         {selectedEvent && (
                             <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
                                 <div 
@@ -581,6 +589,7 @@
                                 ></div>
                                 
                                 <div className="modal-content modal-enter relative bg-white w-full sm:max-w-md h-[80vh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col">
+                                    
                                     <div className="p-6 pb-4 bg-white z-10 border-b border-stone-50">
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center space-x-2">
@@ -599,7 +608,7 @@
                                         
                                         {selectedEvent.hours && (
                                             <div className="flex items-center text-xs text-[#8f9eaf] font-bold mb-3">
-                                                <Icon name="clock" size={12} className="mr-1.5" />
+                                                <Icon name="clock" size={11} className="mr-1.5" />
                                                 {selectedEvent.hours}
                                             </div>
                                         )}
@@ -611,16 +620,18 @@
                                     </div>
 
                                     <div className="flex-1 overflow-y-auto p-6 bg-white space-y-8">
+                                        
+                                        {/* Booking Info Card */}
                                         {selectedEvent.booking && (
-                                            <div className="bg-[#fffbeb] border border-[#fcd34d] border-dashed rounded-xl p-4 mb-4 relative">
-                                                <div className="absolute -top-3 left-4 bg-[#fcd34d] text-[#78350f] text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                                            <div className="bg-[#fafaf9] border border-[#d6bd8d] border-dashed rounded-xl p-4 mb-4 relative">
+                                                <div className="absolute -top-3 left-4 bg-[#d6bd8d] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
                                                     訂位資訊 RESERVATION
                                                 </div>
-                                                <div className="mt-2 space-y-1 text-xs text-[#92400e]">
-                                                    <div className="flex"><span className="w-16 font-bold opacity-70">日期時間</span> {itineraryData[selectedDay].date} {selectedEvent.booking.time}</div>
-                                                    <div className="flex"><span className="w-16 font-bold opacity-70">姓名</span> {selectedEvent.booking.name}</div>
+                                                <div className="mt-2 space-y-1 text-xs text-[#57534e]">
+                                                    <div className="flex"><span className="w-16 font-bold opacity-60">日期時間</span> {itineraryData[selectedDay].date} {selectedEvent.booking.time}</div>
+                                                    <div className="flex"><span className="w-16 font-bold opacity-60">姓名</span> {selectedEvent.booking.name}</div>
                                                     {selectedEvent.booking.id && (
-                                                        <div className="flex"><span className="w-16 font-bold opacity-70">確認號碼</span> <span className="font-mono font-bold bg-white px-1 rounded">{selectedEvent.booking.id}</span></div>
+                                                        <div className="flex"><span className="w-16 font-bold opacity-60">確認號碼</span> <span className="font-mono font-bold bg-white px-1 rounded border border-stone-200">{selectedEvent.booking.id}</span></div>
                                                     )}
                                                 </div>
                                             </div>
