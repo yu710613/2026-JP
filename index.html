@@ -101,7 +101,7 @@
             return hours;
         };
 
-        // --- 完整行程資料 (Day 1 Updated) ---
+        // --- 完整行程資料 (Updated with DAY2 & DAY3 changes) ---
         const itineraryData = {
             "Day 1": { 
                 date: "1/11", weekday: "Sun", area: "大阪梅田", temp: "6-10°C", condition: "Cloudy",
@@ -189,9 +189,20 @@
                         guide: ["6F 動漫層：吉卜力、寶可夢中心、JUMP SHOP。", "PARCO：POP MART 在隔壁 PARCO。"]
                     },
                     { 
-                        time: "16:30", type: "shop", title: "美國村古著巡禮", address: "大阪府大阪市中央区西心斎橋", nav: "Americamura", tags: ["古著"],
-                        guide: ["重點店鋪：Kinji (大型連鎖)、Kindal (品牌古著)、元祖どないや (章魚燒)。"],
-                        about: { title: "大阪原宿", content: "美國村是大阪年輕潮流文化的發源地，充滿了古著店、唱片行與街頭塗鴉。" }
+                        time: "16:30", type: "shop", title: "Kinji used clothing", address: "大阪府大阪市中央区西心斎橋1-6-14 ビッグステップ 2F", nav: "Kinji Big Step", tags: ["古著"],
+                        guide: ["特色：大型連鎖古著店，品項豐富，價格親民。", "位置：位於 Big Step 2樓。"]
+                    },
+                    { 
+                        time: "16:55", type: "shop", title: "kindal カインドオル 心斎橋アメリカ村店", address: "大阪府大阪市中央区西心斎橋2-11-13", nav: "Kindal Shinsaibashi Americamura", tags: ["古著"],
+                        guide: ["特色：主打品牌古著，選品較為精緻。", "推薦：尋找設計師品牌的好地方。"]
+                    },
+                    { 
+                        time: "17:20", type: "food", title: "元祖どないや 心斎橋アメリカ村店", address: "大阪府大阪市中央区西心斎橋1-16-15", nav: "Ganso Donaiya Americamura", tags: ["小吃"],
+                        guide: ["推薦：大顆章魚燒，口感軟嫩。", "注意：小心燙口。"]
+                    },
+                    { 
+                        time: "17:35", type: "shop", title: "kindal カインドオル 四ツ橋北堀江店", address: "大阪府大阪市西区北堀江1-3-10", nav: "Kindal Yotsubashi Kitahorie", tags: ["古著"],
+                        guide: ["區域：位於堀江區，氛圍較悠閒。", "特色：服飾狀況通常保持良好。"]
                     },
                     { time: "18:00", type: "shop", title: "相機的大林", address: "大阪府大阪市北区梅田1-11-4 大阪駅前第4ビル 1F", nav: "Camera no Ohbayashi", guide: ["攝影迷必逛，中古鏡頭豐富。"] },
                     { 
@@ -219,12 +230,56 @@
                         about: { title: "百年歷史", content: "創業於明治 6 年 (1873年)，是京都最古老的壽喜燒專門店。堅持使用熟成黑毛和牛與獨家秘傳醬汁。" }
                     },
                     { 
-                        time: "12:45", type: "sight", title: "嵐山半日遊", address: "京都府京都市右京区嵐山", nav: "Arashiyama Bamboo Grove", tags: ["必拍"],
-                        guide: ["推薦路線：常寂光寺 -> 竹林小徑 -> 野宮神社 -> 天龍寺 -> 渡月橋。", "必喝：% ARABICA 咖啡 (渡月橋旁)。"]
+                        time: "12:45", type: "sight", title: "常寂光寺", address: "京都市右京区嵯峨小倉山小倉町3", nav: "Jojakkoji Temple", tags: ["必拍"],
+                        guide: ["特色：依山而建，紅葉名所，視野極佳。", "氛圍：幽靜古樸，適合散步。"]
                     },
                     { 
-                        time: "17:00", type: "shop", title: "河原町購物", address: "京都府京都市下京区四条通河原町", nav: "Shijo Kawaramachi", 
-                        guide: ["Pokemon Center Kyoto (高島屋 2F)。", "SOU・SOU 本店 (日式足袋)。", "Marimekko 京都店。"]
+                        time: "13:15", type: "sight", title: "竹林小徑", address: "京都市右京区嵯峨小倉山たぶち山町", nav: "Arashiyama Bamboo Grove", tags: ["必拍"],
+                        guide: ["必拍：高聳入雲的竹林隧道。", "注意：人潮眾多，注意拍照禮儀。"]
+                    },
+                    { 
+                        time: "13:45", type: "sight", title: "野宮神社", address: "京都市右京区嵯峨野宮町1", nav: "Nonomiya Shrine", tags: ["結緣"],
+                        guide: ["祈求：良緣與學業進步。", "特色：保留著黒木鳥居，源氏物語中也有記載。"]
+                    },
+                    { 
+                        time: "14:15", type: "sight", title: "天龍寺", address: "京都市右京区嵯峨天龍寺芒ノ馬場町68", nav: "Tenryu-ji", tags: ["世界遺產"],
+                        guide: ["必看：曹源池庭園，借景嵐山，四季皆美。", "地位：京都五山之首。"]
+                    },
+                    { 
+                        time: "14:45", type: "shop", title: "嵐山大街", address: "京都市右京区嵯峨天龍寺造路町", nav: "Arashiyama Main Street", tags: ["逛街"],
+                        guide: ["必吃：湯葉起司可樂餅、抹茶冰淇淋。", "伴手禮：各式京都漬物、和風雜貨。"]
+                    },
+                    { 
+                        time: "15:45", type: "sight", title: "渡月橋", address: "京都市右京区嵯峨中ノ島町", nav: "Togetsukyo Bridge", tags: ["地標"],
+                        guide: ["拍照：站在橋側拍全景，背景是嵐山。", "傳說：過橋時不要回頭，否則好運會溜走。"]
+                    },
+                    { 
+                        time: "16:30", type: "sight", title: "桂川沿岸", address: "京都市西京区嵐山", nav: "Katsura River Arashiyama", tags: ["散步"],
+                        guide: ["活動：推薦買杯咖啡在河岸邊休息。", "推薦：% ARABICA 京都嵐山店就在附近。"]
+                    },
+                    { 
+                        time: "17:00", type: "shop", title: "寶可夢中心京都店", address: "京都市下京区四条通室町東入函谷鉾町78 SUINA室町 2F", nav: "Pokemon Center Kyoto", tags: ["購物"],
+                        guide: ["特色：穿著和服的皮卡丘是京都限定。", "位置：SUINA室町 2樓。"]
+                    },
+                    { 
+                        time: "17:30", type: "sight", title: "住む街でアートを楽しむ", address: "京都市中京区", nav: "Kyoto Art Walk", 
+                        guide: ["內容：欣賞京都街頭的藝術氛圍與建築。"]
+                    },
+                    { 
+                        time: "18:00", type: "shop", title: "藤井大丸百貨", address: "京都市下京区寺町通四条下ル貞安前之町605", nav: "Fujii Daimaru", tags: ["購物"],
+                        guide: ["特色：年輕時尚潮流品牌聚集。", "推薦：BEAMS、UNITED ARROWS 等選貨店。"]
+                    },
+                    { 
+                        time: "18:30", type: "shop", title: "SOU・SOU", address: "京都市中京区新京極通四条上ル中之町583-3", nav: "SOU・SOU Kyoto", tags: ["必逛"],
+                        guide: ["必買：數字圖案的足袋、和風小物。", "分店：附近有多家不同主題的分店 (布料、童裝等)。"]
+                    },
+                    { 
+                        time: "19:00", type: "shop", title: "京都高島屋百貨", address: "京都市下京区四条通河原町西入真町52", nav: "Kyoto Takashimaya", tags: ["購物"],
+                        guide: ["美食：B1 地下街美食豐富。", "品牌：國際精品與化妝品齊全。"]
+                    },
+                    { 
+                        time: "19:30", type: "sight", title: "錦天滿宮", address: "京都市中京区新京極通り四条上る中之町537", nav: "Nishiki Tenmangu", tags: ["祈福"],
+                        guide: ["特色：位於錦市場盡頭，鳥居嵌入建築物中。", "祈求：學問之神，求智慧。"]
                     },
                     { time: "20:00", type: "shop", title: "Animate Kyoto", address: "京都市中京区新京極蛸薬師下ル東側町525-1", nav: "Animate Kyoto", guide: ["動漫迷聖地。"] },
                     { 
@@ -270,7 +325,7 @@
                     { time: "10:00", type: "sight", title: "御金神社", address: "京都市中京区押西洞院町614", nav: "Mikane Shrine", tags: ["求財"], guide: ["金色鳥居。", "可以在此『洗錢』祈求財運。"] },
                     { 
                         time: "11:00", type: "food", title: "麵屋優光", address: "京都市中京区場之町588", nav: "Menya Yukou", tags: ["必吃", "排隊"],
-                        guide: ["必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"],
+                        guide: ["★ 必點菜單：淡竹 (Hachiku) - 貝類高湯醬油拉麵。", "特色：舒肥叉燒軟嫩，全麥麵條香氣足。"],
                         about: { title: "職人精神", content: "店主曾在名店修業，堅持使用多種貝類熬製高湯，創造出充滿鮮味 (Umami) 卻清爽不油膩的新派京都拉麵。" }
                     },
                     { time: "12:00", type: "transport", title: "利木津巴士", address: "京都車站八條口", nav: "Kyoto Station Hachijoguchi Bus Stop", guide: ["前往關西機場 (KIX)。", "車程約 85 分鐘，不用搬行李轉車。"] },
@@ -319,8 +374,8 @@
                 
                 let colorClass = "text-gray-700 font-bold";
                 if (label.includes("必") || label.includes("推")) colorClass = "text-rose-700 font-bold";
-                if (label.includes("攻略") || label.includes("注意") || label.includes("重點")) colorClass = "text-blue-700 font-bold";
-                if (label.includes("預約")) colorClass = "text-amber-700 font-bold";
+                if (label.includes("攻略") || label.includes("注意") || label.includes("重點") || label.includes("移動")) colorClass = "text-blue-700 font-bold";
+                if (label.includes("預約") || label.includes("口味") || label.includes("特色")) colorClass = "text-amber-700 font-bold";
 
                 return (
                     <li className="flex items-start text-sm text-gray-600 leading-relaxed mb-3">
@@ -349,20 +404,6 @@
 
             const handleNav = (loc) => {
                 window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}&travelmode=driving`, '_blank');
-            };
-
-            const parseGuideText = (text) => {
-                const keywords = ["必吃", "必買", "必點", "必拍", "預約", "攻略", "注意", "推薦", "★"];
-                const parts = text.split(new RegExp(`(${keywords.join('|')})`, 'g'));
-                return parts.map((part, index) => {
-                    if (keywords.includes(part)) {
-                        let colorClass = "hl-red";
-                        if (part === "預約" || part === "攻略") colorClass = "hl-blue";
-                        if (part === "推薦" || part === "★") colorClass = "hl-amber";
-                        return <span key={index} className={colorClass}>{part}</span>;
-                    }
-                    return part;
-                });
             };
 
             const renderSchedule = () => {
